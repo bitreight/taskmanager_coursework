@@ -9,7 +9,8 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception{
         primaryStage.setTitle("Task manager");
         ViewLoader.initialize(primaryStage);
-        ViewLoader.loadLogin();
+        //ViewLoader.loadLogin();
+        ViewLoader.loadAdmin();
     }
 
 

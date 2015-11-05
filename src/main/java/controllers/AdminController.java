@@ -9,12 +9,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.ContextMenu;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableRow;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextArea;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.util.Callback;
 import main.java.Task;
@@ -47,7 +42,36 @@ public class AdminController implements Initializable {
      
     @FXML
     private TextArea descriptionArea;
-    
+
+    @FXML
+    private Button taskSaveButton;
+
+    @FXML
+    private TextField taskNameField;
+
+    @FXML
+    private TextField taskNumberField;
+
+    @FXML
+    private DatePicker taskTermPicker;
+
+    @FXML
+    private TextArea taskDescriptionArea;
+
+    @FXML
+    private void taskAddButtonAction() {
+        taskSaveButton.setDisable(false);
+        taskNameField.setPromptText("Название задачи");
+        taskNumberField.setPromptText("Номер");
+        taskTermPicker.setPromptText("Срок");
+        taskDescriptionArea.setPromptText("Описание");
+    }
+
+    @FXML
+    private void taskSaveButtonAction() {
+
+    }
+
     @FXML
     private void tasksTableAction() {
         
@@ -63,7 +87,8 @@ public class AdminController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
-                
+        taskSaveButton.setDisable(true);
+
         idColumn.setCellValueFactory(new PropertyValueFactory<Task, Integer>("id"));
         nameColumn.setCellValueFactory(new PropertyValueFactory<Task, String>("name"));
         descriptionColumn.setCellValueFactory(new PropertyValueFactory<Task, String>("description"));

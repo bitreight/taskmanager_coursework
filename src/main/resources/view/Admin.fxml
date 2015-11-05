@@ -37,7 +37,7 @@
                               <Insets bottom="2.0" top="2.0" />
                            </HBox.margin>
                         </MenuButton>
-                        <Button mnemonicParsing="false" prefHeight="59.0" prefWidth="59.0" styleClass="addButton">
+                        <Button mnemonicParsing="false" onAction="#taskAddButtonAction" prefHeight="59.0" prefWidth="59.0" styleClass="addButton">
                            <graphic>
                               <ImageView fitHeight="48.0" fitWidth="48.0" pickOnBounds="true" preserveRatio="true" styleClass="addButton">
                                  <image>
@@ -94,7 +94,7 @@
                         <HBox alignment="CENTER_LEFT" layoutX="17.0" layoutY="14.0" spacing="4.0" VBox.vgrow="NEVER">
                            <children>
                               <CheckBox mnemonicParsing="false" />
-                              <TextField minWidth="300.0" prefHeight="38.0" prefWidth="761.0" promptText="Название задачи" HBox.hgrow="ALWAYS" />
+                              <TextField fx:id="taskNameField" minWidth="300.0" prefHeight="38.0" prefWidth="761.0" promptText="Название задачи" HBox.hgrow="ALWAYS" />
                            </children>
                         </HBox>
                         <HBox layoutX="18.0" layoutY="72.0" spacing="15.0" VBox.vgrow="NEVER">
@@ -108,7 +108,7 @@
                                                 <Image url="@../images/num.png" />
                                              </image>
                                           </ImageView>
-                                          <TextField layoutX="57.0" layoutY="77.0" minWidth="145.0" prefHeight="38.0" prefWidth="145.0" promptText="Номер" HBox.hgrow="NEVER" />
+                                          <TextField fx:id="taskNumberField" layoutX="57.0" layoutY="77.0" minWidth="145.0" prefHeight="38.0" prefWidth="145.0" promptText="Номер" HBox.hgrow="NEVER" />
                                        </children>
                                     </HBox>
                                     <HBox alignment="CENTER" layoutX="18.0" layoutY="130.0" spacing="12.0" VBox.vgrow="NEVER">
@@ -118,13 +118,13 @@
                                                 <Image url="@../images/term.png" />
                                              </image>
                                           </ImageView>
-                                          <DatePicker minWidth="145.0" prefHeight="38.0" prefWidth="145.0" promptText="Срок" />
+                                          <DatePicker fx:id="taskTermPicker" minWidth="145.0" prefHeight="38.0" prefWidth="145.0" promptText="Срок" />
                                        </children>
                                     </HBox>
-                                    <Button cancelButton="true" layoutX="18.0" layoutY="191.0" mnemonicParsing="false" prefHeight="38.0" prefWidth="181.0" text="Сохранить" />
+                                    <Button fx:id="taskSaveButton" cancelButton="true" layoutX="18.0" layoutY="191.0" mnemonicParsing="false" onAction="#taskSaveButtonAction" prefHeight="38.0" prefWidth="181.0" text="Сохранить" />
                                  </children>
                               </VBox>
-                              <TextArea layoutX="205.0" layoutY="72.0" minHeight="154.0" minWidth="300.0" prefHeight="154.0" prefWidth="504.0" promptText="Описание" HBox.hgrow="ALWAYS" />
+                              <TextArea fx:id="taskDescriptionArea" layoutX="205.0" layoutY="72.0" minHeight="154.0" minWidth="300.0" prefHeight="154.0" prefWidth="504.0" promptText="Описание" HBox.hgrow="ALWAYS" />
                            </children>
                            <VBox.margin>
                               <Insets />
