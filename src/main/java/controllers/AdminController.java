@@ -14,13 +14,14 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.util.Callback;
 import main.java.Task;
 
-
 public class AdminController implements Initializable {
 
     /**
      * Initializes the controller class.
      */
     private final ObservableList<Task> tasks = FXCollections.observableArrayList();
+
+    Alert taskAddAlert = new Alert(Alert.AlertType.WARNING);
     
     @FXML
     private TableView<Task> taskTable;
@@ -70,23 +71,26 @@ public class AdminController implements Initializable {
 
     @FXML
     private void taskSaveButtonAction() {
-        //System.out.println(taskTermPicker.getValue().toString());
-        //while(true) {
-            if (taskNameField.getText().equals("") | taskNumberField.getText().equals("") | taskTermPicker.getValue() == null) {
-                System.out.println("Поля «Название задачи», «Номер» и «Срок» являются обязательными для заполнения");
-            }
-            else if (taskNameField.getText().length() > 60) {
-                System.out.println("Название задачи должно содержать 1..60 символов");
-            }
-            else if (taskNumberField.getText().length() > 8) {
-                System.out.println("Номер задачи должен содержать 1..8 цифр");
-            }
-            else if (taskDescriptionArea.getText().length() > 500) {
-                System.out.println("Описание задачи может содержать не более 500 символов");
-            }
-            else {
-                taskSaveButton.setDisable(true);
-            }
+        if (taskNameField.getText().equals("") | taskNumberField.getText().equals("") |
+                (taskTermPicker.getValue() == null || taskTermPicker.getEditor().getText().equals(""))) {
+            taskAddAlert.setContentText("Поля «Название задачи», «Номер» и «Срок» являются обязательными для заполнения");
+            taskAddAlert.showAndWait();
+        }
+        else if (taskNameField.getText().length() > 60) {
+            taskAddAlert.setContentText("Название задачи должно содержать 1..60 символов");
+            taskAddAlert.showAndWait();
+        }
+        else if (taskNumberField.getText().length() > 8) {
+            taskAddAlert.setContentText("Номер задачи должен содержать 1..8 цифр");
+            taskAddAlert.showAndWait();
+        }
+        else if (taskDescriptionArea.getText().length() > 500) {
+            taskAddAlert.setContentText("Описание задачи может содержать не более 500 символов");
+            taskAddAlert.showAndWait();
+        }
+        else {
+            taskSaveButton.setDisable(true);
+        }
     }
 
     @FXML
@@ -105,6 +109,8 @@ public class AdminController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
         taskSaveButton.setDisable(true);
+        taskAddAlert.setTitle("");
+        taskAddAlert.setHeaderText("Внимание!");
 
         idColumn.setCellValueFactory(new PropertyValueFactory<Task, Integer>("id"));
         nameColumn.setCellValueFactory(new PropertyValueFactory<Task, String>("name"));
