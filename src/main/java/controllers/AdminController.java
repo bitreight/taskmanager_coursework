@@ -20,8 +20,6 @@ public class AdminController implements Initializable {
      * Initializes the controller class.
      */
     private final ObservableList<Task> tasks = FXCollections.observableArrayList();
-
-    Alert taskAddAlert = new Alert(Alert.AlertType.WARNING);
     
     @FXML
     private TableView<Task> taskTable;
@@ -73,18 +71,30 @@ public class AdminController implements Initializable {
     private void taskSaveButtonAction() {
         if (taskNameField.getText().equals("") | taskNumberField.getText().equals("") |
                 (taskTermPicker.getValue() == null || taskTermPicker.getEditor().getText().equals(""))) {
+            Alert taskAddAlert = new Alert(Alert.AlertType.WARNING);
+            taskAddAlert.setTitle("");
+            taskAddAlert.setHeaderText("Внимание!");
             taskAddAlert.setContentText("Поля «Название задачи», «Номер» и «Срок» являются обязательными для заполнения");
             taskAddAlert.showAndWait();
         }
         else if (taskNameField.getText().length() > 60) {
+            Alert taskAddAlert = new Alert(Alert.AlertType.WARNING);
+            taskAddAlert.setTitle("");
+            taskAddAlert.setHeaderText("Внимание!");
             taskAddAlert.setContentText("Название задачи должно содержать 1..60 символов");
             taskAddAlert.showAndWait();
         }
         else if (taskNumberField.getText().length() > 8) {
+            Alert taskAddAlert = new Alert(Alert.AlertType.WARNING);
+            taskAddAlert.setTitle("");
+            taskAddAlert.setHeaderText("Внимание!");
             taskAddAlert.setContentText("Номер задачи должен содержать 1..8 цифр");
             taskAddAlert.showAndWait();
         }
         else if (taskDescriptionArea.getText().length() > 500) {
+            Alert taskAddAlert = new Alert(Alert.AlertType.WARNING);
+            taskAddAlert.setTitle("");
+            taskAddAlert.setHeaderText("Внимание!");
             taskAddAlert.setContentText("Описание задачи может содержать не более 500 символов");
             taskAddAlert.showAndWait();
         }
@@ -109,8 +119,6 @@ public class AdminController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
         taskSaveButton.setDisable(true);
-        taskAddAlert.setTitle("");
-        taskAddAlert.setHeaderText("Внимание!");
 
         idColumn.setCellValueFactory(new PropertyValueFactory<Task, Integer>("id"));
         nameColumn.setCellValueFactory(new PropertyValueFactory<Task, String>("name"));
