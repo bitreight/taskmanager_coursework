@@ -45,7 +45,7 @@ Begin
 	Insert Into Developers Values (@username, @password, @name, @surname, @patronymic, @position, @isAdmin);
 End
 Go
---Execute addDeveloper 'test',123,name,surname,patronymic,test,0;
+--Execute addDeveloper 'test',123,'name','surname','patronymic','test',0;
 --Delete From Developers;
 Go
 
@@ -62,7 +62,7 @@ Begin
 End
 
 Go
---Execute addTask 100,task,testtask,'01-01-2016',0;
+--Execute addTask 100,'task2','testtask','01-01-2016',0;
 --Delete From Tasks;
 Go
 
@@ -76,8 +76,9 @@ Begin
 	Declare @relation_id int;
 	Select @relation_id = (Select id From Developers_Tasks 
 					Where Developers_Tasks.task_id = @task_id and 
-						  Developers_Tasks.developer_id = @oldDeveloper_id);
-	If @relation_id = NULL
+						  Developers_Tasks.developer_id = @oldDeveloper_id or
+						  Developers_Tasks.developer_id = @newDeveloper_id);
+	If @relation_id is NULL
 		Begin
 			Insert Into Developers_Tasks Values (@newDeveloper_id, @task_id, 3);
 			Select @result = 1;
@@ -94,3 +95,4 @@ Begin
 			Select @result = 1;
 		End
 End
+--Execute assignTask 0,5,8;
