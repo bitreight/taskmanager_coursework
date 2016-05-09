@@ -31,7 +31,7 @@ Create Table Developers_Tasks (
 );
 Go
 
-Create Procedure addDeveloper
+Create Procedure createDeveloper
 	@username nvarchar(10), 
 	@password binary(32),
 	@name nvarchar(20),
@@ -49,7 +49,7 @@ Go
 --Delete From Developers;
 Go
 
-Create Procedure addTask
+Create Procedure createTask
 	@number int,
 	@name nvarchar(60),
 	@description nvarchar(500),
