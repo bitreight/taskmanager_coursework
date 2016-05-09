@@ -115,3 +115,20 @@ End
 Go
 --Execute assignTask 1, 1; 
 --Delete From Developers_Tasks;
+Go
+
+Create Procedure deassignTask
+	@developer_id int,
+	@task_id int
+As	
+Begin	
+	Set Nocount On;
+	If Exists(Select * From Developers_Tasks Where 
+					Developers_Tasks.task_id = @task_id and 
+					Developers_Tasks.developer_id = @developer_id)
+		Begin			
+			Delete From Developers_Tasks 
+			Where task_id = @task_id and developer_id = @developer_id;
+		End	
+End
+Go
