@@ -54,7 +54,7 @@ Create Procedure addTask
 	@name nvarchar(60),
 	@description nvarchar(500),
 	@deadline date,
-	@priority int,
+	@priority int = 3,
 	@isCompleted bit
 As
 Begin
@@ -99,7 +99,7 @@ Go
 --Execute assignTask 0,5,8;
 
 Create Procedure assignTask
-	@developer_id int = 0,
+	@developer_id int,
 	@task_id int
 	--@result bit = 0 OUTPUT
 As	
