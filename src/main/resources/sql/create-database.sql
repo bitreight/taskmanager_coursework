@@ -54,11 +54,12 @@ Create Procedure addTask
 	@name nvarchar(60),
 	@description nvarchar(500),
 	@deadline date,
+	@priority int,
 	@isCompleted bit
 As
 Begin
 	Set Nocount On;
-	Insert Into Tasks Values (@number, @name, @description, @deadline, @isCompleted);
+	Insert Into Tasks Values (@number, @name, @description, @deadline, @priority, @isCompleted);
 End
 
 Go
