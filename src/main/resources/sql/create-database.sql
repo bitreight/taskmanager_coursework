@@ -117,6 +117,29 @@ Go
 --Delete From Developers_Tasks;
 Go
 
+--Trigger checks if the chosen task is assigned to two developers or if the chosen developer has 3 tasks.
+--Trigger fires when inserting in the table 'Developers_Tasks'.
+Create Trigger checkAssignTask
+	On Developers_Tasks 
+	For Insert
+As
+Begin
+	Set Nocount On;
+	If (Select Count(*) From Developers_Tasks Where 
+			Developers_Tasks.task_id = (Select i.task_id From (Select * From inserted) i)) = 3
+		Begin
+			Rollback Transaction
+			Print 'Данная задача уже назначена двум разработчикам.'
+		End
+	Else if (Select Count(*) From Developers_Tasks Where 
+			Developers_Tasks.developer_id = (Select i.developer_id From (Select * From inserted) i)) = 4
+		Begin
+			Rollback Transaction
+			Print 'Выбранному разработчику уже назначено 3 задачи.'
+		End
+End
+Go
+
 Create Procedure deassignTask
 	@developer_id int,
 	@task_id int
