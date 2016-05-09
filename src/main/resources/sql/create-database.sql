@@ -165,13 +165,8 @@ Create Procedure deassignTask
 As	
 Begin	
 	Set Nocount On;
-	If Exists(Select * From Developers_Tasks Where 
-					Developers_Tasks.task_id = @task_id and 
-					Developers_Tasks.developer_id = @developer_id)
-		Begin			
-			Delete From Developers_Tasks 
-			Where task_id = @task_id and developer_id = @developer_id;
-		End	
+	Delete From Developers_Tasks 
+	Where task_id = @task_id and developer_id = @developer_id;		
 End
 Go
 
