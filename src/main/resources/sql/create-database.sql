@@ -67,6 +67,25 @@ Go
 --Delete From Tasks;
 Go
 
+Create Procedure updateTask
+	@task_id int,
+	@number int,
+	@name nvarchar(60),
+	@description nvarchar(500),
+	@deadline date,
+	@priority int,
+	@isCompleted bit
+As
+Begin
+	Set Nocount On;
+		Update Tasks 
+		Set number = @number, name = @name, [description] = @description, deadline = @deadline,
+			[priority] = @priority, isCompleted = @isCompleted
+		Where id = @task_id;	
+End
+
+Go
+
 --Create Procedure assignTask
 --	@oldDeveloper_id int = 0,
 --	@newDeveloper_id int = 0,
@@ -155,3 +174,4 @@ Begin
 		End	
 End
 Go
+
