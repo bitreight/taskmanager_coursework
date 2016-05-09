@@ -45,7 +45,7 @@ Begin
 	Insert Into Developers Values (@username, @password, @name, @surname, @patronymic, @position, @isAdmin);
 End
 Go
---Execute addDeveloper 'test',123,'name','surname','patronymic','test',0;
+--Execute addDeveloper 'test2',123,'name','surname','patronymic','test',0;
 --Delete From Developers;
 Go
 
@@ -63,7 +63,7 @@ Begin
 End
 
 Go
---Execute addTask 100,'task2','testtask','01-01-2016',0;
+--Execute addTask 100,'task2','testtask','01-01-2016', 3, 0;
 --Delete From Tasks;
 Go
 
@@ -113,3 +113,5 @@ Begin
 		End	
 End
 Go
+--Execute assignTask 1, 1; 
+--Delete From Developers_Tasks;
