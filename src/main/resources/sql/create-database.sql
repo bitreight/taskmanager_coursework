@@ -67,33 +67,49 @@ Go
 --Delete From Tasks;
 Go
 
-Create Procedure assignTask
-	@oldDeveloper_id int = 0,
-	@newDeveloper_id int = 0,
-	@task_id int,
-	@result bit = 0 OUTPUT
-As	
-Begin
-	Declare @relation_id int;
-	Select @relation_id = (Select id From Developers_Tasks 
-					Where Developers_Tasks.task_id = @task_id and 
-						  Developers_Tasks.developer_id = @oldDeveloper_id or
-						  Developers_Tasks.developer_id = @newDeveloper_id);
-	If @relation_id is NULL
-		Begin
-			Insert Into Developers_Tasks Values (@newDeveloper_id, @task_id, 3);
-			Select @result = 1;
-		End
-	Else If @newDeveloper_id = 0
-		Begin
-			Delete From Developers_Tasks Where id = @relation_id;
-			Select @result = 1;
-		End
-	Else
-		Begin
-			Update Developers_Tasks Set developer_id = @newDeveloper_id
-			Where id = @relation_id;
-			Select @result = 1;
-		End
-End
+--Create Procedure assignTask
+--	@oldDeveloper_id int = 0,
+--	@newDeveloper_id int = 0,
+--	@task_id int,
+--	@result bit = 0 OUTPUT
+--As	
+--Begin
+--	Declare @relation_id int;
+--	Select @relation_id = (Select id From Developers_Tasks 
+--					Where Developers_Tasks.task_id = @task_id and 
+--						  Developers_Tasks.developer_id = @oldDeveloper_id or
+--						  Developers_Tasks.developer_id = @newDeveloper_id);
+--	If @relation_id is NULL
+--		Begin
+--			Insert Into Developers_Tasks Values (@newDeveloper_id, @task_id, 3);
+--			Select @result = 1;
+--		End
+--	Else If @newDeveloper_id = 0
+--		Begin
+--			Delete From Developers_Tasks Where id = @relation_id;
+--			Select @result = 1;
+--		End
+--	Else
+--		Begin
+--			Update Developers_Tasks Set developer_id = @newDeveloper_id
+--			Where id = @relation_id;
+--			Select @result = 1;
+--		End
+--End
 --Execute assignTask 0,5,8;
+
+Create Procedure assignTask
+	@developer_id int = 0,
+	@task_id int
+	--@result bit = 0 OUTPUT
+As	
+Begin	
+	Set Nocount On;
+	If Not Exists(Select * From Developers_Tasks Where 
+					Developers_Tasks.task_id = @task_id and 
+					Developers_Tasks.developer_id = @developer_id)
+		Begin			
+			Insert Into Developers_Tasks Values (@task_id, @developer_id);
+		End	
+End
+Go
