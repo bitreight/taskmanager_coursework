@@ -20,14 +20,14 @@ Create Table Tasks (
 	[name] nvarchar(60) not null,
 	[description] nvarchar(500),
 	[deadline] date not null,
+	[priority] int not null Check ([priority] In(1,2,3)),
 	[isCompleted] bit not null	
 );
 
 Create Table Developers_Tasks (
 	[id] int Primary Key Identity(1,1) not null,
-	[developer_id] int Foreign Key References Developers(id) not null,
-	[task_id] int Foreign Key References Tasks(id) not null,
-	[priority] int not null Check ([priority] In(1,2,3))
+	[task_id] int Foreign Key References Tasks(id) not null,	
+	[developer_id] int Foreign Key References Developers(id) not null
 );
 Go
 
