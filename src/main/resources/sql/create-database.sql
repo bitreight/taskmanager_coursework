@@ -1,4 +1,4 @@
-Create Database taskmanager;
+п»їCreate Database taskmanager;
 Go
 
 Use taskmanager;
@@ -129,13 +129,13 @@ Begin
 			Developers_Tasks.task_id = (Select i.task_id From (Select * From inserted) i)) = 3
 		Begin
 			Rollback Transaction
-			Print 'Данная задача уже назначена двум разработчикам.'
+			Print 'Р”Р°РЅРЅР°СЏ Р·Р°РґР°С‡Р° СѓР¶Рµ РЅР°Р·РЅР°С‡РµРЅР° РґРІСѓРј СЂР°Р·СЂР°Р±РѕС‚С‡РёРєР°Рј.'
 		End
 	Else if (Select Count(*) From Developers_Tasks Where 
 			Developers_Tasks.developer_id = (Select i.developer_id From (Select * From inserted) i)) = 4
 		Begin
 			Rollback Transaction
-			Print 'Выбранному разработчику уже назначено 3 задачи.'
+			Print 'Р’С‹Р±СЂР°РЅРЅРѕРјСѓ СЂР°Р·СЂР°Р±РѕС‚С‡РёРєСѓ СѓР¶Рµ РЅР°Р·РЅР°С‡РµРЅРѕ 3 Р·Р°РґР°С‡Рё.'
 		End
 End
 Go
