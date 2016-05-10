@@ -87,10 +87,10 @@ Go
 Go
 
 --Trigger checks if there are 2 tasks with the highest priority (1) in the table 'Tasks'.
---Trigger fires when inserting in the table 'Tasks'.
-Create Trigger checkCreateTaskTrigger
+--Trigger fires when inserting in the table or updating table 'Tasks'.
+Create Trigger checkChangeTaskPriorityTrigger
 	On Tasks
-	For Insert
+	For Insert, Update
 As
 Begin
 	Set Nocount On;
