@@ -27,7 +27,7 @@ Create Table Tasks (
 Create Table Developers_Tasks (
 	[id] int Primary Key Identity(1,1) not null,
 	[task_id] int Foreign Key References Tasks(id) not null,	
-	[developer_id] int Foreign Key References Developers(id) not null
+	[dev_id] int Foreign Key References Developers(id) not null
 );
 Go
 
@@ -50,7 +50,7 @@ Go
 Go
 
 Create Procedure updateDeveloper
-	@developer_id int,
+	@dev_id int,
 	@username nvarchar(10), 
 	@password binary(32),
 	@dev_name nvarchar(20),
@@ -64,7 +64,7 @@ Begin
 	Update Developers
 	Set username = @username, [password] = @password, dev_name = @dev_name, surname = @surname,
 		patronymic = @patronymic, position = @position, isAdmin = @isAdmin
-	Where id = @developer_id;	
+	Where id = @dev_id;	
 End
 Go	
 
@@ -131,15 +131,15 @@ End
 
 Go
 
-Create Function getTasksByDeveloper(@developer_id int)
+Create Function getTasksByDeveloper(@dev_id int)
 Returns Table
 As 
 Return
 (
 	Select Tasks.*, Developers.dev_name From Tasks 
 	Join Developers_Tasks On Tasks.id = Developers_Tasks.task_id
-	Join Developers On Developers.id = Developers_Tasks.developer_id
-	Where Developers.id = @developer_id
+	Join Developers On Developers.id = Developers_Tasks.dev_id
+	Where Developers.id = @dev_id
 	Order By Tasks.id
 )
 Go
@@ -176,7 +176,7 @@ Go
 --Execute assignTask 0,5,8;
 
 Create Procedure assignTask
-	@developer_id int,
+	@dev_id int,
 	@task_id int
 	--@result bit = 0 OUTPUT
 As	
@@ -184,9 +184,9 @@ Begin
 	Set Nocount On;
 	If Not Exists(Select * From Developers_Tasks Where 
 					Developers_Tasks.task_id = @task_id and 
-					Developers_Tasks.developer_id = @developer_id)
+					Developers_Tasks.dev_id = @dev_id)
 		Begin			
-			Insert Into Developers_Tasks Values (@task_id, @developer_id);
+			Insert Into Developers_Tasks Values (@task_id, @dev_id);
 		End	
 End
 Go
@@ -209,7 +209,7 @@ Begin
 			Print 'Данная задача уже назначена двум разработчикам.'
 		End
 	Else if (Select Count(*) From Developers_Tasks Where 
-			Developers_Tasks.developer_id = (Select i.developer_id From (Select * From inserted) i)) = 4
+			Developers_Tasks.dev_id = (Select i.dev_id From (Select * From inserted) i)) = 4
 		Begin
 			Rollback Transaction
 			Print 'Выбранному разработчику уже назначено 3 задачи.'
@@ -218,13 +218,13 @@ End
 Go
 
 Create Procedure deassignTask
-	@developer_id int,
+	@dev_id int,
 	@task_id int
 As	
 Begin	
 	Set Nocount On;
 	Delete From Developers_Tasks 
-	Where task_id = @task_id and developer_id = @developer_id;		
+	Where task_id = @task_id and dev_id = @dev_id;		
 End
 Go
 
