@@ -49,6 +49,25 @@ Go
 --Delete From Developers;
 Go
 
+Create Procedure updateDeveloper
+	@developer_id int,
+	@username nvarchar(10), 
+	@password binary(32),
+	@name nvarchar(20),
+	@surname nvarchar(20),
+	@patronymic nvarchar(20),
+	@position nvarchar(50),
+	@isAdmin bit
+As
+Begin
+	Set Nocount On;
+	Update Developers
+	Set username = @username, [password] = @password, name = @name, surname = @surname,
+		patronymic = @patronymic, position = @position, isAdmin = @isAdmin
+	Where id = @developer_id;	
+End
+Go	
+
 Create Procedure createTask
 	@number int,
 	@name nvarchar(60),
