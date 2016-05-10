@@ -131,6 +131,47 @@ End
 
 Go
 
+--Create Function getTasks()
+--Returns
+--@Tasks Table
+--(
+--	[id] int, [number] int, [task_name] nvarchar(60), [description] nvarchar(500),
+--	[deadline] date, [priority] int, [isCompleted] bit
+--)
+--As
+--Begin
+--	Declare @devs nvarchar(100) = '';
+--	Select task_id From Developers_Tasks
+--	Group By task_id
+
+--	Select Tasks.*, Developers.dev_name From Tasks 
+--	Join Developers_Tasks On Tasks.id = Developers_Tasks.task_id
+--	Join Developers On Developers.id = Developers_Tasks.dev_id
+--	--Where 
+--	--Group By Tasks.id, number, Tasks.task_name, [description], deadline, [priority], isCompleted, Developers.dev_name
+--	Order By Tasks.id
+	
+--	Return
+--End
+--Go
+
+--This function finds developers having the selected task and concat their full names into one row.
+--It is to be called from getTasks() procedure.
+Create Function selectConcat(@task_id int)
+Returns nvarchar(MAX)
+As
+Begin
+	Declare @result nvarchar(MAX) = '';
+	Select @result = @result + task_dev.dev_name + ' ' + 
+					 Left(task_dev.surname, 1) + '.' +
+					 Left(task_dev.patronymic, 1) + '. '
+	From (Select Developers_Tasks.task_id, Developers.dev_name, Developers.surname, Developers.patronymic 
+		  From Developers_Tasks Join Developers On Developers_Tasks.dev_id = Developers.id) task_dev
+	Where task_dev.task_id = @task_id;
+	Print @result;
+End
+Go
+
 Create Function getTasksByDeveloper(@dev_id int)
 Returns Table
 As 
