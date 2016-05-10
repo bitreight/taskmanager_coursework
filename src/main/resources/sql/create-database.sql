@@ -7,7 +7,7 @@ Create Table Developers (
 	[id] int Primary Key Identity(1,1) not null,
 	[username] nvarchar(10) not null,
 	[password] binary(32) not null,
-	[name] nvarchar(20) not null,
+	[dev_name] nvarchar(20) not null,
 	[surname] nvarchar(20) not null,
 	[patronymic] nvarchar(20) not null,
 	[position] nvarchar(50) not null,
@@ -17,7 +17,7 @@ Create Table Developers (
 Create Table Tasks (
 	[id] int Primary Key Identity(1,1) not null,
 	[number] int not null,
-	[name] nvarchar(60) not null,
+	[task_name] nvarchar(60) not null,
 	[description] nvarchar(500),
 	[deadline] date not null,
 	[priority] int not null Check ([priority] In(1,2,3)),
