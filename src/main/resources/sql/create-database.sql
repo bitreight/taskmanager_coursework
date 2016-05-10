@@ -86,6 +86,23 @@ Go
 --Delete From Tasks;
 Go
 
+--Trigger checks if there are 2 tasks with the highest priority (1) in the table 'Tasks'.
+--Trigger fires when inserting in the table 'Tasks'.
+Create Trigger checkCreateTaskTrigger
+	On Tasks
+	For Insert
+As
+Begin
+	Set Nocount On;
+	If((Select i.[priority] From inserted i) = 1) and
+		((Select Count(*) From Tasks Where [priority] = 1) = 3)
+		Begin
+			Rollback Transaction
+			Print 'В списке уже имеется две задачи с наивысшим приоритетом.'
+		End
+End
+Go
+
 Create Procedure updateTask
 	@task_id int,
 	@number int,
