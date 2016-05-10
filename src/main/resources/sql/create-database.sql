@@ -68,6 +68,15 @@ Begin
 End
 Go	
 
+Create Function getDevelopers()
+Returns Table
+As 
+Return
+(
+	Select username, name, surname, patronymic, position, isAdmin From Developers
+)
+Go
+
 Create Procedure createTask
 	@number int,
 	@name nvarchar(60),
