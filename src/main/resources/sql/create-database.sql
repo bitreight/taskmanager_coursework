@@ -131,6 +131,19 @@ End
 
 Go
 
+Create Function getTasksByDeveloper(@developer_id int)
+Returns Table
+As 
+Return
+(
+	Select Tasks.*, Developers.name From Tasks 
+	Join Developers_Tasks On Tasks.id = Developers_Tasks.task_id
+	Join Developers On Developers.id = Developers_Tasks.developer_id
+	Where Developers.id = @developer_id
+	Order By Tasks.id
+)
+Go
+
 --Create Procedure assignTask
 --	@oldDeveloper_id int = 0,
 --	@newDeveloper_id int = 0,
