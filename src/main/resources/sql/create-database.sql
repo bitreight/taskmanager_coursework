@@ -206,3 +206,13 @@ Begin
 End
 Go
 
+Create Procedure setTaskCompletionByUser
+	@task_id int,
+	@isCompleted bit
+As
+Begin
+	Set Nocount On;
+	Update Tasks
+	Set isCompleted = @isCompleted
+	Where id = @task_id;
+End
