@@ -174,7 +174,7 @@ Go
 
 --Trigger checks if the chosen task is assigned to two developers or if the chosen developer has 3 tasks.
 --Trigger fires when inserting in the table 'Developers_Tasks'.
-Create Trigger checkAssignTask
+Create Trigger checkAssignTaskTrigger
 	On Developers_Tasks 
 	For Insert
 As
