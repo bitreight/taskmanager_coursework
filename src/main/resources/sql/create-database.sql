@@ -34,7 +34,7 @@ Go
 Create Procedure createDeveloper
 	@username nvarchar(10), 
 	@password binary(32),
-	@name nvarchar(20),
+	@dev_name nvarchar(20),
 	@surname nvarchar(20),
 	@patronymic nvarchar(20),
 	@position nvarchar(50),
@@ -42,7 +42,7 @@ Create Procedure createDeveloper
 As
 Begin
 	Set Nocount On;
-	Insert Into Developers Values (@username, @password, @name, @surname, @patronymic, @position, @isAdmin);
+	Insert Into Developers Values (@username, @password, @dev_name, @surname, @patronymic, @position, @isAdmin);
 End
 Go
 --Execute addDeveloper 'test2',123,'name','surname','patronymic','test',0;
@@ -53,7 +53,7 @@ Create Procedure updateDeveloper
 	@developer_id int,
 	@username nvarchar(10), 
 	@password binary(32),
-	@name nvarchar(20),
+	@dev_name nvarchar(20),
 	@surname nvarchar(20),
 	@patronymic nvarchar(20),
 	@position nvarchar(50),
@@ -62,7 +62,7 @@ As
 Begin
 	Set Nocount On;
 	Update Developers
-	Set username = @username, [password] = @password, name = @name, surname = @surname,
+	Set username = @username, [password] = @password, dev_name = @dev_name, surname = @surname,
 		patronymic = @patronymic, position = @position, isAdmin = @isAdmin
 	Where id = @developer_id;	
 End
@@ -73,13 +73,13 @@ Returns Table
 As 
 Return
 (
-	Select username, name, surname, patronymic, position, isAdmin From Developers
+	Select username, dev_name, surname, patronymic, position, isAdmin From Developers
 )
 Go
 
 Create Procedure createTask
 	@number int,
-	@name nvarchar(60),
+	@task_name nvarchar(60),
 	@description nvarchar(500),
 	@deadline date,
 	@priority int = 3,
@@ -87,7 +87,7 @@ Create Procedure createTask
 As
 Begin
 	Set Nocount On;
-	Insert Into Tasks Values (@number, @name, @description, @deadline, @priority, @isCompleted);
+	Insert Into Tasks Values (@number, @task_name, @description, @deadline, @priority, @isCompleted);
 End
 
 Go
@@ -115,7 +115,7 @@ Go
 Create Procedure updateTask
 	@task_id int,
 	@number int,
-	@name nvarchar(60),
+	@task_name nvarchar(60),
 	@description nvarchar(500),
 	@deadline date,
 	@priority int,
@@ -124,7 +124,7 @@ As
 Begin
 	Set Nocount On;
 		Update Tasks 
-		Set number = @number, name = @name, [description] = @description, deadline = @deadline,
+		Set number = @number, task_name = @task_name, [description] = @description, deadline = @deadline,
 			[priority] = @priority, isCompleted = @isCompleted
 		Where id = @task_id;	
 End
@@ -136,7 +136,7 @@ Returns Table
 As 
 Return
 (
-	Select Tasks.*, Developers.name From Tasks 
+	Select Tasks.*, Developers.dev_name From Tasks 
 	Join Developers_Tasks On Tasks.id = Developers_Tasks.task_id
 	Join Developers On Developers.id = Developers_Tasks.developer_id
 	Where Developers.id = @developer_id
