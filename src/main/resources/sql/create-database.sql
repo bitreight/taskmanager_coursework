@@ -92,7 +92,6 @@ Begin
 End
 Go
 
---TODO: uniqueness of the numbers check.
 Create Procedure createTask
     @number int,
     @task_name nvarchar(60),
@@ -107,7 +106,6 @@ Begin
 End
 Go
 
---TODO: uniqueness of the numbers check.
 Create Procedure updateTask
     @task_id int,
     @number int,
@@ -272,15 +270,22 @@ Begin
 End
 Go
 
---Trigger checks if there are 2 tasks with the highest priority (1) in the table 'Tasks'.
+--At first trigger checks if there is a task number in the table 'Tasks' as the task number is to be added.
+--At second trigger checks if there are 2 tasks with the highest priority (1) in the table 'Tasks'.
 --Trigger fires when inserting in the table or updating table 'Tasks'.
-Create Trigger checkChangeTaskPriorityTrigger
+Create Trigger checkTaskNumberAndPriorityTrigger
     On Tasks
     For Insert, Update
 As
 Begin
     Set Nocount On;
-    If((Select i.[priority] From inserted i) = 1) and
+    If (Select Count(*) From Tasks 
+        Where Tasks.number = (Select i.number From (Select * From inserted) i)) = 2
+        Begin
+            Rollback Transaction
+            Print 'Задача с таким номером существует в базе данных.'
+        End
+    Else If((Select i.[priority] From inserted i) = 1) and
         ((Select Count(*) From Tasks Where [priority] = 1) = 3)
         Begin
             Rollback Transaction
