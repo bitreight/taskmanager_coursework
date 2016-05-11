@@ -54,7 +54,6 @@ Begin
 End
 Go
 
---TODO: uniqueness of the usernames check.
 Create Procedure updateDeveloper
     @dev_id int,
     @username nvarchar(10), 
@@ -216,10 +215,10 @@ End
 Go
 
 --Trigger checks if there is a username in the table 'Developers' as the username is to be added.
---Trigger fires when inserting in the table 'Developers'.
-Create Trigger checkCreateDeveloperTrigger
+--Trigger fires when inserting in the table or updating table 'Developers'.
+Create Trigger checkCreateOrUpdateDeveloperTrigger
     On Developers
-    For Insert
+    For Insert, Update
 As
 Begin
     Set Nocount On;
