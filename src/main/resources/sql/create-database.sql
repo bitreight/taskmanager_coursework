@@ -153,13 +153,12 @@ Return
 )
 Go
 
---TODO: Return fullname of the developer (name, surname, patronymic).
 Create Function getTasksByDeveloper(@dev_id int)
 Returns Table
 As 
 Return
 (
-    Select Top 100 percent Tasks.*, Developers.dev_name From Tasks 
+    Select Top 100 percent Tasks.*, Developers.dev_name, Developers.surname, Developers.patronymic From Tasks 
     Join Developers_Tasks On Tasks.id = Developers_Tasks.task_id
     Join Developers On Developers.id = Developers_Tasks.dev_id
     Where Developers.id = @dev_id
