@@ -84,7 +84,6 @@ Return
 )
 Go
 
---TODO: Developer deletion should be checked by trigger (deassigning tasks of the developer).
 Create Procedure deleteDeveloper
     @dev_id int
 As
