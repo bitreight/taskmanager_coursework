@@ -189,12 +189,7 @@ Create Procedure assignTask
 As	
 Begin	
     Set Nocount On;
-    If Not Exists(Select * From Developers_Tasks Where 
-                    Developers_Tasks.task_id = @task_id and 
-                    Developers_Tasks.dev_id = @dev_id)
-        Begin			
-            Insert Into Developers_Tasks Values (@task_id, @dev_id);
-        End	
+    Insert Into Developers_Tasks Values (@task_id, @dev_id);
 End
 Go
 
@@ -311,14 +306,22 @@ Begin
 End
 Go
 
---Trigger checks if the chosen task is assigned to two developers or if the chosen developer has 3 tasks.
+--Trigger checks if the chosen task is assigned to chosen developer or
+--if the chosen task is assigned to two developers or if the chosen developer has 3 tasks.
 --Trigger fires when inserting in the table 'Developers_Tasks'.
 Create Trigger checkAssignTaskTrigger
     On Developers_Tasks 
-    For Insert
+    For Insert, Update
 As
 Begin
     Set Nocount On;
+    If (Select Count(*) From Developers_Tasks Where 
+                  Developers_Tasks.task_id = (Select i.task_id From (Select * From inserted) i) and 
+                  Developers_Tasks.dev_id = (Select i.dev_id From (Select * From inserted) i)) = 2
+        Begin
+            Rollback Transaction
+            Print 'Данная задача уже назначена этому разработчику.'
+        End
     If (Select Count(*) From Developers_Tasks 
         Where Developers_Tasks.task_id = (Select i.task_id From (Select * From inserted) i)) = 3
         Begin
@@ -341,5 +344,5 @@ Go
 --Execute createTask 100,'task2','testtask','01-01-2016', 3, 0;
 --Delete From Tasks;
 
---Execute assignTask 4, 2; 
+--Execute assignTask 4, 2;
 --Delete From Developers_Tasks;
