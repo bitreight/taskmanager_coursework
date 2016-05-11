@@ -84,6 +84,15 @@ Return
 )
 Go
 
+--TODO: Developer deletion should be checked by trigger (deassigning tasks of the developer).
+Create Procedure deleteDeveloper
+    @dev_id int
+As
+Begin
+    Delete From Developers Where id = @dev_id;  
+End
+Go
+
 --TODO: uniqueness of the numbers check.
 Create Procedure createTask
     @number int,
