@@ -125,6 +125,7 @@ End
 
 Go
 
+--This function returns all the tasks and developers of each task concated in one row.
 Create Function getTasks()
 Returns Table
 As 
