@@ -38,6 +38,14 @@ Create Table Developers_Tasks (
 );
 Go
 
+------------Users creation--------------
+Create Login TaskmanagerUser With Password = 'Qwerty123';
+Create User TaskmanagerUser For Login TaskmanagerUser;
+Grant Insert, Select, Update, Delete On Developers To TaskmanagerUser;
+Grant Insert, Select, Update, Delete On Tasks To TaskmanagerUser;
+Grant Insert, Select, Update, Delete On Developers_tasks To TaskmanagerUser;
+Go
+
 --------Programmability creation--------
 Create Procedure createDeveloper
     @username nvarchar(10), 
