@@ -168,7 +168,7 @@ Begin
 	From (Select Developers_Tasks.task_id, Developers.dev_name, Developers.surname, Developers.patronymic 
 		  From Developers_Tasks Join Developers On Developers_Tasks.dev_id = Developers.id) task_dev
 	Where task_dev.task_id = @task_id;
-	Print @result;
+	Return @result;
 End
 Go
 
