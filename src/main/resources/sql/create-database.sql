@@ -39,7 +39,6 @@ Create Table Developers_Tasks (
 Go
 
 --------Programmability creation--------
---TODO: uniqueness of the usernames check.
 Create Procedure createDeveloper
     @username nvarchar(10), 
     @password binary(32),
@@ -215,6 +214,23 @@ Begin
     Update Tasks
     Set is_completed = @is_completed
     Where id = @task_id;
+End
+Go
+
+--Trigger checks if there is a username in the table 'Developers' as the username is to be added.
+--Trigger fires when inserting in the table 'Developers'.
+Create Trigger checkCreateDeveloperTrigger
+    On Developers
+    For Insert
+As
+Begin
+    Set Nocount On;
+    If (Select Count(*) From Developers 
+        Where Developers.username = (Select i.username From (Select * From inserted) i)) = 2
+        Begin
+            Rollback Transaction
+            Print 'Указанное имя входа существует в базе данных.'
+        End                
 End
 Go
 
