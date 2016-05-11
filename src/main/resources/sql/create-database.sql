@@ -171,6 +171,15 @@ Return
 )
 Go
 
+Create Procedure deleteTask
+    @task_id int
+As
+Begin
+    Set Nocount On;
+    Delete From Tasks Where id = @task_id;
+End
+Go
+
 Create Procedure assignTask
     @dev_id int,
     @task_id int   
@@ -225,6 +234,25 @@ Begin
     Delete Developers
     From Deleted
     Where Deleted.id = Developers.id
+End
+Go
+
+--Trigger fires when deleting from table 'Tasks'.
+--It deletes relations between task and its developers from 'Developers_Tasks' first, then 
+--deletes task from 'Tasks'.
+Create Trigger checkDeleteTaskTrigger
+    On Tasks
+    Instead Of Delete
+As
+Begin
+    Set Nocount On;
+    Delete Developers_Tasks
+    From Deleted
+    Where Deleted.id = Developers_Tasks.task_id
+
+    Delete Tasks
+    From Deleted
+    Where Deleted.id = Tasks.id
 End
 Go
 
