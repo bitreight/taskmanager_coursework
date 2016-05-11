@@ -89,6 +89,7 @@ Create Procedure deleteDeveloper
     @dev_id int
 As
 Begin
+    Set Nocount On;
     Delete From Developers Where id = @dev_id;  
 End
 Go
@@ -270,9 +271,10 @@ Go
 
 --Execute createDeveloper 'test2',123,'name','surname','patronymic','test',0;
 --Delete From Developers;
+--Execute deleteDeveloper 4;
 
 --Execute createTask 100,'task2','testtask','01-01-2016', 3, 0;
 --Delete From Tasks;
 
---Execute assignTask 1, 1; 
+--Execute assignTask 4, 2; 
 --Delete From Developers_Tasks;
