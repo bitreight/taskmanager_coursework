@@ -315,15 +315,15 @@ Create Trigger checkAssignTaskTrigger
 As
 Begin
     Set Nocount On;
-    If (Select Count(*) From Developers_Tasks Where 
-                  Developers_Tasks.task_id = (Select i.task_id From (Select * From inserted) i) and 
-                  Developers_Tasks.dev_id = (Select i.dev_id From (Select * From inserted) i)) = 2
+    If (Select Count(*) From Developers_Tasks 
+        Where Developers_Tasks.task_id = (Select i.task_id From (Select * From inserted) i) and 
+              Developers_Tasks.dev_id = (Select i.dev_id From (Select * From inserted) i)) = 2
         Begin
             Rollback Transaction
             Print 'Данная задача уже назначена этому разработчику.'
         End
-    If (Select Count(*) From Developers_Tasks 
-        Where Developers_Tasks.task_id = (Select i.task_id From (Select * From inserted) i)) = 3
+    Else If (Select Count(*) From Developers_Tasks 
+             Where Developers_Tasks.task_id = (Select i.task_id From (Select * From inserted) i)) = 3
         Begin
             Rollback Transaction
             Print 'Данная задача уже назначена двум разработчикам.'
