@@ -209,6 +209,25 @@ Begin
 End
 Go
 
+--Trigger fires when deleting from table 'Developers'.
+--It deletes relations between developer and its tasks from 'Developers_Tasks' first, then 
+--deletes developer from 'Developers'.
+Create Trigger checkDeleteDeveloperTrigger
+    On Developers
+    Instead OF Delete
+As
+Begin
+    Set Nocount On;
+    Delete Developers_Tasks
+    From Deleted
+    Where Deleted.id = Developers_Tasks.dev_id
+
+    Delete Developers
+    From Deleted
+    Where Deleted.id = Developers.id
+End
+Go
+
 --Trigger checks if there are 2 tasks with the highest priority (1) in the table 'Tasks'.
 --Trigger fires when inserting in the table or updating table 'Tasks'.
 Create Trigger checkChangeTaskPriorityTrigger
@@ -249,10 +268,10 @@ Begin
 End
 Go
 
---Execute addDeveloper 'test2',123,'name','surname','patronymic','test',0;
+--Execute createDeveloper 'test2',123,'name','surname','patronymic','test',0;
 --Delete From Developers;
 
---Execute addTask 100,'task2','testtask','01-01-2016', 3, 0;
+--Execute createTask 100,'task2','testtask','01-01-2016', 3, 0;
 --Delete From Tasks;
 
 --Execute assignTask 1, 1; 
