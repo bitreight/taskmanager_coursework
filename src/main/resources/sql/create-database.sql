@@ -125,22 +125,16 @@ End
 
 Go
 
---Create Function getTasks()
---Returns Table
---As 
---Return
---(
---	Select task_id From Developers_Tasks
---	Group By task_id
-
---	Select Tasks.*, Developers.dev_name From Tasks 
---	Join Developers_Tasks On Tasks.id = Developers_Tasks.task_id
---	Join Developers On Developers.id = Developers_Tasks.dev_id
---	--Where 
---	--Group By Tasks.id, number, Tasks.task_name, [description], deadline, [priority], isCompleted, Developers.dev_name
---	Order By Tasks.id	
---)
---Go
+Create Function getTasks()
+Returns Table
+As 
+Return
+(
+	Select Tasks.*, dbo.selectConcat(Tasks.id) As dev_name  From Tasks 
+	Left Join Developers_Tasks On Tasks.id = Developers_Tasks.task_id
+	Group By Tasks.id, number, Tasks.task_name, [description], deadline, [priority], isCompleted
+)
+Go
 
 --This function finds developers having the selected task and concat their full names into one row.
 --It is to be called from getTasks() procedure.
