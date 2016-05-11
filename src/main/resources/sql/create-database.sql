@@ -1,7 +1,14 @@
-﻿Create Database taskmanager;
+﻿--*******************************************************************--
+--This SQL script is for Microsoft SQL Server.
+--It creates database 'taskmanager' with all the tables,
+--procedures, functions, triggers and users for application connection.
+--*******************************************************************--
+Create Database taskmanager;
 Go
 
 Use taskmanager;
+
+-----------Tables creation-----------
 
 Create Table Developers (
     [id] int Primary Key Identity(1,1) not null,
@@ -31,6 +38,8 @@ Create Table Developers_Tasks (
 );
 Go
 
+--------Programmability creation--------
+--TODO: uniqueness of the usernames check.
 Create Procedure createDeveloper
     @username nvarchar(10), 
     @password binary(32),
@@ -46,6 +55,7 @@ Begin
 End
 Go
 
+--TODO: uniqueness of the usernames check.
 Create Procedure updateDeveloper
     @dev_id int,
     @username nvarchar(10), 
@@ -74,38 +84,22 @@ Return
 )
 Go
 
+--TODO: uniqueness of the numbers check.
 Create Procedure createTask
     @number int,
     @task_name nvarchar(60),
     @description nvarchar(500),
     @deadline date,
-    @priority int = 3,
+    @priority int,
     @is_completed bit
 As
 Begin
     Set Nocount On;
     Insert Into Tasks Values (@number, @task_name, @description, @deadline, @priority, @is_completed);
 End
-
 Go
 
---Trigger checks if there are 2 tasks with the highest priority (1) in the table 'Tasks'.
---Trigger fires when inserting in the table or updating table 'Tasks'.
-Create Trigger checkChangeTaskPriorityTrigger
-    On Tasks
-    For Insert, Update
-As
-Begin
-    Set Nocount On;
-    If((Select i.[priority] From inserted i) = 1) and
-        ((Select Count(*) From Tasks Where [priority] = 1) = 3)
-        Begin
-            Rollback Transaction
-            Print 'В списке уже имеется две задачи с наивысшим приоритетом.'
-        End
-End
-Go
-
+--TODO: uniqueness of the numbers check.
 Create Procedure updateTask
     @task_id int,
     @number int,
@@ -125,18 +119,6 @@ End
 
 Go
 
---This function returns all the tasks and developers of each task concated in one row.
-Create Function getTasks()
-Returns Table
-As 
-Return
-(
-    Select Tasks.*, dbo.selectConcat(Tasks.id) As dev_name  From Tasks 
-    Left Join Developers_Tasks On Tasks.id = Developers_Tasks.task_id
-    Group By Tasks.id, number, Tasks.task_name, [description], deadline, [priority], is_completed
-)
-Go
-
 --This function finds developers having the selected task and concat their full names into one row.
 --It is to be called from getTasks() procedure.
 Create Function selectConcat(@task_id int)
@@ -154,7 +136,19 @@ Begin
 End
 Go
 
---TODO: Concat developer's name, surname, patronymic in the last column of the table returned.
+--This function returns all the tasks and developers of each task concated in one row.
+Create Function getTasks()
+Returns Table
+As 
+Return
+(
+    Select Tasks.*, dbo.selectConcat(Tasks.id) As dev_name  From Tasks 
+    Left Join Developers_Tasks On Tasks.id = Developers_Tasks.task_id
+    Group By Tasks.id, number, Tasks.task_name, [description], deadline, [priority], is_completed
+)
+Go
+
+--TODO: Return fullname of the developer (name, surname, patronymic).
 Create Function getTasksByDeveloper(@dev_id int)
 Returns Table
 As 
@@ -170,8 +164,7 @@ Go
 
 Create Procedure assignTask
     @dev_id int,
-    @task_id int
-    --@result bit = 0 OUTPUT
+    @task_id int   
 As	
 Begin	
     Set Nocount On;
@@ -181,6 +174,46 @@ Begin
         Begin			
             Insert Into Developers_Tasks Values (@task_id, @dev_id);
         End	
+End
+Go
+
+Create Procedure deassignTask
+    @dev_id int,
+    @task_id int
+As	
+Begin	
+    Set Nocount On;
+    Delete From Developers_Tasks 
+    Where task_id = @task_id and dev_id = @dev_id;		
+End
+Go
+
+Create Procedure setTaskCompletionByUser
+    @task_id int,
+    @is_completed bit
+As
+Begin
+    Set Nocount On;
+    Update Tasks
+    Set is_completed = @is_completed
+    Where id = @task_id;
+End
+Go
+
+--Trigger checks if there are 2 tasks with the highest priority (1) in the table 'Tasks'.
+--Trigger fires when inserting in the table or updating table 'Tasks'.
+Create Trigger checkChangeTaskPriorityTrigger
+    On Tasks
+    For Insert, Update
+As
+Begin
+    Set Nocount On;
+    If((Select i.[priority] From inserted i) = 1) and
+        ((Select Count(*) From Tasks Where [priority] = 1) = 3)
+        Begin
+            Rollback Transaction
+            Print 'В списке уже имеется две задачи с наивысшим приоритетом.'
+        End
 End
 Go
 
@@ -207,28 +240,6 @@ Begin
 End
 Go
 
-Create Procedure deassignTask
-    @dev_id int,
-    @task_id int
-As	
-Begin	
-    Set Nocount On;
-    Delete From Developers_Tasks 
-    Where task_id = @task_id and dev_id = @dev_id;		
-End
-Go
-
-Create Procedure setTaskCompletionByUser
-    @task_id int,
-    @is_completed bit
-As
-Begin
-    Set Nocount On;
-    Update Tasks
-    Set is_completed = @is_completed
-    Where id = @task_id;
-End
-
 --Execute addDeveloper 'test2',123,'name','surname','patronymic','test',0;
 --Delete From Developers;
 
@@ -237,34 +248,3 @@ End
 
 --Execute assignTask 1, 1; 
 --Delete From Developers_Tasks;
-
---Create Procedure assignTask
---	@oldDeveloper_id int = 0,
---	@newDeveloper_id int = 0,
---	@task_id int,
---	@result bit = 0 OUTPUT
---As	
---Begin
---	Declare @relation_id int;
---	Select @relation_id = (Select id From Developers_Tasks 
---					Where Developers_Tasks.task_id = @task_id and 
---						  Developers_Tasks.developer_id = @oldDeveloper_id or
---						  Developers_Tasks.developer_id = @newDeveloper_id);
---	If @relation_id is NULL
---		Begin
---			Insert Into Developers_Tasks Values (@newDeveloper_id, @task_id, 3);
---			Select @result = 1;
---		End
---	Else If @newDeveloper_id = 0
---		Begin
---			Delete From Developers_Tasks Where id = @relation_id;
---			Select @result = 1;
---		End
---	Else
---		Begin
---			Update Developers_Tasks Set developer_id = @newDeveloper_id
---			Where id = @relation_id;
---			Select @result = 1;
---		End
---End
---Execute assignTask 0,5,8;
