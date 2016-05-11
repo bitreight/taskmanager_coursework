@@ -213,6 +213,17 @@ Begin
 End
 Go
 
+--This procedure is for checking if user is admin when logging in.
+Create Procedure checkIfUserIsAdmin
+    @dev_id int,
+    @result bit OUTPUT
+As
+Begin
+    Set Nocount On;
+    Select @result = Developers.is_admin From Developers Where Developers.id = @dev_id;
+End
+Go
+
 --Trigger checks if there is a username in the table 'Developers' as the username is to be added.
 --Trigger fires when inserting in the table or updating table 'Developers'.
 Create Trigger checkCreateOrUpdateDeveloperTrigger
