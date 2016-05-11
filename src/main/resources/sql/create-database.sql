@@ -11,7 +11,7 @@ Create Table Developers (
     [surname] nvarchar(20) not null,
     [patronymic] nvarchar(20) not null,
     [position] nvarchar(50) not null,
-    [isAdmin] bit not null
+    [is_admin] bit not null
 );
 
 Create Table Tasks (
@@ -21,7 +21,7 @@ Create Table Tasks (
     [description] nvarchar(500),
     [deadline] date not null,
     [priority] int not null Check ([priority] In(1,2,3)),
-    [isCompleted] bit not null	
+    [is_completed] bit not null	
 );
 
 Create Table Developers_Tasks (
@@ -38,11 +38,11 @@ Create Procedure createDeveloper
     @surname nvarchar(20),
     @patronymic nvarchar(20),
     @position nvarchar(50),
-    @isAdmin bit
+    @is_admin bit
 As
 Begin
     Set Nocount On;
-    Insert Into Developers Values (@username, @password, @dev_name, @surname, @patronymic, @position, @isAdmin);
+    Insert Into Developers Values (@username, @password, @dev_name, @surname, @patronymic, @position, @is_admin);
 End
 Go
 
@@ -54,13 +54,13 @@ Create Procedure updateDeveloper
     @surname nvarchar(20),
     @patronymic nvarchar(20),
     @position nvarchar(50),
-    @isAdmin bit
+    @is_admin bit
 As
 Begin
     Set Nocount On;
     Update Developers
     Set username = @username, [password] = @password, dev_name = @dev_name, surname = @surname,
-        patronymic = @patronymic, position = @position, isAdmin = @isAdmin
+        patronymic = @patronymic, position = @position, is_admin = @is_admin
     Where id = @dev_id;	
 End
 Go	
@@ -70,7 +70,7 @@ Returns Table
 As 
 Return
 (
-    Select username, dev_name, surname, patronymic, position, isAdmin From Developers
+    Select username, dev_name, surname, patronymic, position, is_admin From Developers
 )
 Go
 
@@ -80,11 +80,11 @@ Create Procedure createTask
     @description nvarchar(500),
     @deadline date,
     @priority int = 3,
-    @isCompleted bit
+    @is_completed bit
 As
 Begin
     Set Nocount On;
-    Insert Into Tasks Values (@number, @task_name, @description, @deadline, @priority, @isCompleted);
+    Insert Into Tasks Values (@number, @task_name, @description, @deadline, @priority, @is_completed);
 End
 
 Go
@@ -113,13 +113,13 @@ Create Procedure updateTask
     @description nvarchar(500),
     @deadline date,
     @priority int,
-    @isCompleted bit
+    @is_completed bit
 As
 Begin
     Set Nocount On;
     Update Tasks 
     Set number = @number, task_name = @task_name, [description] = @description, deadline = @deadline,
-        [priority] = @priority, isCompleted = @isCompleted
+        [priority] = @priority, is_completed = @is_completed
     Where id = @task_id;	
 End
 
@@ -133,7 +133,7 @@ Return
 (
     Select Tasks.*, dbo.selectConcat(Tasks.id) As dev_name  From Tasks 
     Left Join Developers_Tasks On Tasks.id = Developers_Tasks.task_id
-    Group By Tasks.id, number, Tasks.task_name, [description], deadline, [priority], isCompleted
+    Group By Tasks.id, number, Tasks.task_name, [description], deadline, [priority], is_completed
 )
 Go
 
@@ -220,12 +220,12 @@ Go
 
 Create Procedure setTaskCompletionByUser
     @task_id int,
-    @isCompleted bit
+    @is_completed bit
 As
 Begin
     Set Nocount On;
     Update Tasks
-    Set isCompleted = @isCompleted
+    Set is_completed = @is_completed
     Where id = @task_id;
 End
 
