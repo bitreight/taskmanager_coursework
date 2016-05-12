@@ -216,14 +216,24 @@ Begin
 End
 Go
 
---This procedure is for checking if user is admin when logging in.
-Create Procedure checkIfUserIsAdmin
-    @dev_id int,
-    @result bit OUTPUT
+--This procedure checks if entered user credentials are valid and if user is admin.
+Create Procedure checkCredentials
+    @username nvarchar(10),
+    @password binary(32),
+    @is_valid bit OUTPUT,
+    @is_admin bit OUTPUT
 As
 Begin
     Set Nocount On;
-    Select @result = Developers.is_admin From Developers Where Developers.id = @dev_id;
+    Select @is_admin = Developers.is_admin From Developers 
+    Where Developers.username = @username and Developers.[password] = @password;
+    If @is_admin is NULL
+        Begin
+            Select @is_valid = 0;
+            Select @is_admin = 0;
+        End
+    Else 
+        Select @is_valid = 1;
 End
 Go
 
