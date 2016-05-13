@@ -104,8 +104,8 @@ Create Procedure createTask
     @task_name nvarchar(60),
     @description nvarchar(500),
     @deadline date,
-    @priority int,
-    @is_completed bit
+    @priority int = 3,
+    @is_completed bit = 0
 As
 Begin
     Set Nocount On;
