@@ -157,7 +157,7 @@ Return
 (
     Select Tasks.*, dbo.selectConcat(Tasks.id) As dev_name  From Tasks 
     Left Join Developers_Tasks On Tasks.id = Developers_Tasks.task_id
-    Group By Tasks.id, number, Tasks.task_name, [description], deadline, [priority], is_completed
+    Group By Tasks.id, Tasks.number, Tasks.task_name, Tasks.[description], Tasks.deadline, Tasks.[priority], Tasks.is_completed
 )
 Go
 
