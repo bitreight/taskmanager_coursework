@@ -3,6 +3,9 @@
 --It creates database 'taskmanager' with all the tables,
 --procedures, functions, triggers and users for application connection.
 --*******************************************************************--
+
+--TODO: Add function which gets list of developers of the selected task.
+
 Create Database taskmanager;
 Go
 
