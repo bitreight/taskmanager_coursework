@@ -13,7 +13,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane id="backgroundPane" minHeight="300.0" minWidth="400.0" prefHeight="600.0" prefWidth="800.0" styleClass="backgroundPane" stylesheets="@AdminStyle.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.java.controllers.AdminController">
+<AnchorPane id="backgroundPane" minHeight="300.0" minWidth="400.0" prefHeight="600.0" prefWidth="1000.0" styleClass="backgroundPane" stylesheets="@AdminStyle.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.java.controllers.AdminController">
    <children>
       <VBox alignment="CENTER" prefHeight="700.0" prefWidth="900.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -71,8 +71,8 @@
                         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                      </columnResizePolicy>
                      <columns>
-                        <TableColumn fx:id="idColumn" maxWidth="70.0" minWidth="70.0" prefWidth="70.0" resizable="false" text="№" />
-                        <TableColumn fx:id="nameColumn" maxWidth="2000.0" minWidth="100.0" prefWidth="310.0" text="Название" />
+                        <TableColumn fx:id="idColumn" maxWidth="105.0" minWidth="105.0" prefWidth="105.0" resizable="false" text="№" />
+                        <TableColumn fx:id="nameColumn" maxWidth="2000.0" minWidth="100.0" prefWidth="440.0" text="Название" />
                         <TableColumn fx:id="termColumn" maxWidth="100.0" minWidth="100.0" prefWidth="100.0" text="Срок" />
                         <TableColumn fx:id="stateColumn" maxWidth="100.0" minWidth="100.0" prefWidth="100.0" text="Статус">
                            <contextMenu>
@@ -84,62 +84,77 @@
                            </contextMenu>
                         </TableColumn>
                         <TableColumn maxWidth="100.0" minWidth="100.0" prefWidth="100.0" text="Приоритет" />
-                        <TableColumn maxWidth="120.0" minWidth="120.0" prefWidth="120.0" text="Разработчик" />
+                        <TableColumn maxWidth="155.0" minWidth="155.0" prefWidth="155.0" text="Разработчик" />
                      </columns>
                   </TableView>
                </children>
             </AnchorPane>
             <AnchorPane id="descriptionPane" maxHeight="300.0" prefHeight="300.0" prefWidth="770.0" styleClass="taskPane" VBox.vgrow="NEVER">
                <children>
-                  <VBox layoutX="17.0" layoutY="14.0" prefHeight="301.0" prefWidth="770.0" spacing="20.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                  <HBox prefHeight="266.0" prefWidth="770.0" spacing="15.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <children>
-                        <HBox alignment="CENTER_LEFT" layoutX="17.0" layoutY="14.0" spacing="4.0" VBox.vgrow="NEVER">
+                        <VBox prefHeight="301.0" prefWidth="770.0" spacing="20.0" HBox.hgrow="ALWAYS">
                            <children>
-                              <CheckBox mnemonicParsing="false" />
-                              <TextField fx:id="taskNameField" minWidth="300.0" prefHeight="38.0" prefWidth="761.0" promptText="Название задачи" HBox.hgrow="ALWAYS" />
-                           </children>
-                        </HBox>
-                        <HBox layoutX="18.0" layoutY="72.0" spacing="15.0" VBox.vgrow="ALWAYS">
-                           <children>
-                              <VBox layoutX="18.0" layoutY="72.0" spacing="20.0">
+                              <HBox alignment="CENTER_LEFT" layoutX="17.0" layoutY="14.0" spacing="4.0" VBox.vgrow="NEVER">
                                  <children>
-                                    <HBox alignment="CENTER" layoutX="18.0" layoutY="72.0" spacing="12.0" VBox.vgrow="NEVER">
-                                       <children>
-                                          <ImageView fitHeight="24.0" fitWidth="24.0" layoutX="18.0" layoutY="68.0" pickOnBounds="true" preserveRatio="true">
-                                             <image>
-                                                <Image url="@../images/num.png" />
-                                             </image>
-                                          </ImageView>
-                                          <TextField fx:id="taskNumberField" layoutX="57.0" layoutY="77.0" minWidth="145.0" prefHeight="38.0" prefWidth="145.0" promptText="Номер" HBox.hgrow="NEVER" />
-                                       </children>
-                                    </HBox>
-                                    <HBox alignment="CENTER" layoutX="18.0" layoutY="130.0" spacing="12.0" VBox.vgrow="NEVER">
-                                       <children>
-                                          <ImageView fitHeight="24.0" fitWidth="24.0" layoutX="20.0" layoutY="125.0" pickOnBounds="true" preserveRatio="true">
-                                             <image>
-                                                <Image url="@../images/term.png" />
-                                             </image>
-                                          </ImageView>
-                                          <DatePicker fx:id="taskTermPicker" minWidth="145.0" prefHeight="38.0" prefWidth="145.0" promptText="Срок" />
-                                       </children>
-                                    </HBox>
-                                    <HBox VBox.vgrow="NEVER">
-                                       <children>
-                                          <ChoiceBox />
-                                       </children>
-                                    </HBox>
-                                    <Button fx:id="taskSaveButton" cancelButton="true" layoutX="18.0" layoutY="191.0" mnemonicParsing="false" onAction="#taskSaveButtonAction" prefHeight="38.0" prefWidth="181.0" text="Сохранить" />
+                                    <CheckBox mnemonicParsing="false" />
+                                    <TextField fx:id="taskNameField" minWidth="300.0" prefHeight="38.0" prefWidth="761.0" promptText="Название задачи" HBox.hgrow="ALWAYS" />
                                  </children>
-                              </VBox>
-                              <TextArea fx:id="taskDescriptionArea" layoutX="205.0" layoutY="72.0" promptText="Описание" HBox.hgrow="ALWAYS" />
+                              </HBox>
+                              <HBox layoutX="18.0" layoutY="72.0" spacing="15.0" VBox.vgrow="ALWAYS">
+                                 <children>
+                                    <VBox layoutX="18.0" layoutY="72.0" spacing="20.0">
+                                       <children>
+                                          <HBox alignment="CENTER" layoutX="18.0" layoutY="72.0" spacing="12.0" VBox.vgrow="NEVER">
+                                             <children>
+                                                <ImageView fitHeight="24.0" fitWidth="24.0" layoutX="18.0" layoutY="68.0" pickOnBounds="true" preserveRatio="true">
+                                                   <image>
+                                                      <Image url="@../images/num.png" />
+                                                   </image>
+                                                </ImageView>
+                                                <TextField fx:id="taskNumberField" layoutX="57.0" layoutY="77.0" minWidth="145.0" prefHeight="38.0" prefWidth="145.0" promptText="Номер" HBox.hgrow="NEVER" />
+                                             </children>
+                                          </HBox>
+                                          <HBox alignment="CENTER" layoutX="18.0" layoutY="130.0" spacing="12.0" VBox.vgrow="NEVER">
+                                             <children>
+                                                <ImageView fitHeight="24.0" fitWidth="24.0" layoutX="20.0" layoutY="125.0" pickOnBounds="true" preserveRatio="true">
+                                                   <image>
+                                                      <Image url="@../images/term.png" />
+                                                   </image>
+                                                </ImageView>
+                                                <DatePicker fx:id="taskTermPicker" minWidth="145.0" prefHeight="38.0" prefWidth="145.0" promptText="Срок" />
+                                             </children>
+                                          </HBox>
+                                          <HBox VBox.vgrow="NEVER">
+                                             <children>
+                                                <ChoiceBox maxWidth="150.0" />
+                                             </children>
+                                          </HBox>
+                                          <Button fx:id="taskSaveButton" cancelButton="true" layoutX="18.0" layoutY="191.0" mnemonicParsing="false" onAction="#taskSaveButtonAction" prefHeight="38.0" prefWidth="181.0" text="Сохранить" />
+                                       </children>
+                                    </VBox>
+                                    <TextArea fx:id="taskDescriptionArea" layoutX="205.0" layoutY="72.0" minWidth="250.0" promptText="Описание" HBox.hgrow="ALWAYS" />
+                                 </children>
+                                 <VBox.margin>
+                                    <Insets />
+                                 </VBox.margin>
+                              </HBox>
                            </children>
-                           <VBox.margin>
-                              <Insets />
-                           </VBox.margin>
-                        </HBox>
+                        </VBox>
+                        <VBox maxWidth="190.0" minWidth="190.0" prefHeight="265.0" prefWidth="190.0" spacing="20.0" HBox.hgrow="NEVER">
+                           <children>
+                              <ChoiceBox maxWidth="190.0" minWidth="190.0" prefHeight="37.0" prefWidth="190.0" />
+                              <ListView maxWidth="190.0" minWidth="190.0" prefHeight="151.0" prefWidth="190.0" />
+                              <HBox spacing="15.0">
+                                 <children>
+                                    <Button mnemonicParsing="false" text="Добавить" />
+                                    <Button mnemonicParsing="false" prefHeight="37.0" prefWidth="81.0" text="Удалить" />
+                                 </children>
+                              </HBox>
+                           </children>
+                        </VBox>
                      </children>
-                  </VBox>
-                  <Label layoutX="17.0" layoutY="144.0" />
+                  </HBox>
                </children>
                <VBox.margin>
                   <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
