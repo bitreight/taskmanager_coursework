@@ -31,14 +31,14 @@
     -fx-background-color: grey;
 }
 
-#taskAddButton {
+#taskAddButton, #refreshButton {
     -fx-background-color: transparent;
     -fx-background-radius: 0;
     -fx-text-fill: white;
     -fx-font-size: 16;
 }
 
-#taskAddButton:hover {
+#taskAddButton:hover, #refreshButton:hover {
     -fx-background-color: grey;
 }
 

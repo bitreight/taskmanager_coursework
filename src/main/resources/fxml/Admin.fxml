@@ -48,6 +48,15 @@
                            <HBox.margin>
                               <Insets bottom="-2.0" />
                            </HBox.margin></Button>
+                        <Button id="refreshButton" minHeight="56.0" mnemonicParsing="false" prefHeight="56.0" prefWidth="59.0">
+                           <graphic>
+                              <ImageView fitHeight="48.0" fitWidth="48.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../images/refresh.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Button>
                         <Region prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
                         <ChoiceBox maxHeight="36.0" minHeight="30.0" prefHeight="36.0" prefWidth="150.0">
                            <HBox.margin>
