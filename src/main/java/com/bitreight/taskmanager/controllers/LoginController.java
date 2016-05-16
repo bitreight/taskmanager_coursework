@@ -1,6 +1,5 @@
 package com.bitreight.taskmanager.controllers;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
