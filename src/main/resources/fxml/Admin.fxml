@@ -126,9 +126,14 @@
                                                 <DatePicker fx:id="taskTermPicker" minWidth="145.0" prefHeight="38.0" prefWidth="145.0" promptText="Срок" />
                                              </children>
                                           </HBox>
-                                          <HBox VBox.vgrow="NEVER">
+                                          <HBox alignment="CENTER" spacing="12.0" VBox.vgrow="NEVER">
                                              <children>
-                                                <ChoiceBox maxWidth="150.0" />
+                                                <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                                                   <image>
+                                                      <Image url="@../images/priority.png" />
+                                                   </image>
+                                                </ImageView>
+                                                <ChoiceBox prefWidth="145.0" />
                                              </children>
                                           </HBox>
                                           <Button fx:id="taskSaveButton" cancelButton="true" layoutX="18.0" layoutY="191.0" mnemonicParsing="false" onAction="#taskSaveButtonAction" prefHeight="38.0" prefWidth="181.0" text="Сохранить" />
