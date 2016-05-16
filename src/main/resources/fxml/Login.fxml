@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.text.*?>
@@ -19,12 +18,12 @@
                   <Insets bottom="10.0" />
                </VBox.margin>
             </ImageView>
-            <TextField fx:id="usernameField" focusTraversable="false" prefHeight="35.0" prefWidth="250.0" promptText="Пользователь">
+            <TextField fx:id="usernameField" focusTraversable="false" onMouseClicked="#textFieldsClick" prefHeight="35.0" prefWidth="250.0" promptText="Пользователь">
                <font>
                   <Font size="16.0" />
                </font>
             </TextField>
-            <PasswordField fx:id="passwordField" focusTraversable="false" prefHeight="35.0" prefWidth="250.0" promptText="Пароль" VBox.vgrow="ALWAYS">
+            <PasswordField fx:id="passwordField" focusTraversable="false" onMouseClicked="#textFieldsClick" prefHeight="35.0" prefWidth="250.0" promptText="Пароль" VBox.vgrow="ALWAYS">
                <font>
                   <Font size="16.0" />
                </font>
