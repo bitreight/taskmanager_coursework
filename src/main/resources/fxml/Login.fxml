@@ -1,17 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.shape.*?>
-<?import javafx.scene.paint.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.text.*?>
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane prefHeight="580.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.java.controllers.LoginController">
+<AnchorPane prefHeight="580.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.bitreight.taskmanager.controllers.LoginController">
    <children>
       <VBox alignment="CENTER" fillWidth="false" layoutX="10.0" layoutY="10.0" spacing="40.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -23,17 +18,17 @@
                   <Insets bottom="10.0" />
                </VBox.margin>
             </ImageView>
-            <TextField fx:id="usernameField" focusTraversable="false" onMouseClicked="#textFieldsClick" prefHeight="35.0" prefWidth="250.0" promptText="Пользователь">
+            <TextField fx:id="usernameField" focusTraversable="false" prefHeight="35.0" prefWidth="250.0" promptText="Пользователь">
                <font>
                   <Font size="16.0" />
                </font>
             </TextField>
-            <PasswordField fx:id="passwordField" focusTraversable="false" onMouseClicked="#textFieldsClick" prefHeight="35.0" prefWidth="250.0" promptText="Пароль" VBox.vgrow="ALWAYS">
+            <PasswordField fx:id="passwordField" focusTraversable="false" prefHeight="35.0" prefWidth="250.0" promptText="Пароль" VBox.vgrow="ALWAYS">
                <font>
                   <Font size="16.0" />
                </font>
             </PasswordField>
-            <Button fx:id="loginButton" alignment="CENTER" mnemonicParsing="false" onAction="#loginButtonAction" prefHeight="49.0" prefWidth="224.0" text="Войти" textAlignment="CENTER">
+            <Button fx:id="loginButton" alignment="CENTER" mnemonicParsing="false" prefHeight="49.0" prefWidth="224.0" text="Войти" textAlignment="CENTER">
                <font>
                   <Font size="16.0" />
                </font>
