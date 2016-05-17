@@ -42,7 +42,11 @@ Create Table Developers_Tasks (
 Go
 
 ------------Users creation--------------
-Create Login TaskmanagerUser With Password = 'Qwerty123';
+If not Exists (select name from master.dbo.syslogins 
+               where name = 'TaskmanagerUser')
+Begin
+    Create Login TaskmanagerUser With Password = 'Qwerty123';
+End
 Create User TaskmanagerUser For Login TaskmanagerUser;
 Grant Insert, Select, Update, Delete On Developers To TaskmanagerUser;
 Grant Insert, Select, Update, Delete On Tasks To TaskmanagerUser;
@@ -349,6 +353,9 @@ Begin
         End
 End
 Go
+
+--Add default admin of the project 
+Insert Into Developers Values('admin', HASHBYTES('SHA2_256', 'password'), 'Курчевский', 'Алексей', 'Александрович', 'Project manager', 1);
 
 --Execute createDeveloper 'test2',123,'name','surname','patronymic','test',0;
 --Delete From Developers;
