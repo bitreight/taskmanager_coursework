@@ -1,5 +1,6 @@
 package com.bitreight.taskmanager.controllers;
 
+import com.bitreight.taskmanager.Authorization;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -37,7 +38,8 @@ public class LoginController {
             invalidLabel.setText("Пароль пользователя должен содержать 3..10 символов");
         }
         else {
-            loadAdmin();
+            //Authorization auth = new Authorization();
+            //auth.login(username, password);
         }
     }
 
@@ -67,7 +69,6 @@ public class LoginController {
     //testable
     private boolean checkUsername(String username) {
         return !(username.length() < 3 | username.length() > 10);
-
     }
 
     //testable
