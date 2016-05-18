@@ -41,16 +41,19 @@ Create Table Developers_Tasks (
 );
 Go
 
-------------Users creation--------------
+------------Login and user creation--------------
 If not Exists (select name from master.dbo.syslogins 
                where name = 'TaskmanagerUser')
 Begin
     Create Login TaskmanagerUser With Password = 'Qwerty123';
 End
 Create User TaskmanagerUser For Login TaskmanagerUser;
+
+--------Grant permissions to created user---------
 Grant Insert, Select, Update, Delete On Developers To TaskmanagerUser;
 Grant Insert, Select, Update, Delete On Tasks To TaskmanagerUser;
 Grant Insert, Select, Update, Delete On Developers_tasks To TaskmanagerUser;
+Grant Execute To TaskmanagerUser;
 Go
 
 --------Programmability creation--------
