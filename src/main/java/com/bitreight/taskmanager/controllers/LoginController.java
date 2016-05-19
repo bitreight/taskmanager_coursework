@@ -10,10 +10,14 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import javafx.fxml.FXMLLoader;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
 
-public class LoginController {
+public class LoginController extends AbstractController {
+
+    @Autowired
+    private Authorization auth;
 
     @FXML
     private TextField usernameField;
@@ -39,7 +43,9 @@ public class LoginController {
         }
         else {
             //Authorization auth = new Authorization();
-            //auth.login(username, password);
+            if(auth.login(username, password).isValid) {
+                loadAdmin();
+            }
         }
     }
 
