@@ -54,6 +54,7 @@ public class LoginController extends AbstractController {
         invalidLabel.setText("");
     }
 
+    //TODO: should be moved into ScreensController
     private void loadAdmin() throws IOException {
         final String pathToAdminScreen = "/fxml/Admin.fxml";
         Parent root = FXMLLoader.load(getClass().getResource(pathToAdminScreen));
@@ -63,6 +64,7 @@ public class LoginController extends AbstractController {
         stage.show();
     }
 
+    //TODO: should be moved into ScreensController
     private void loadUser() throws IOException {
         final String pathToUserScreen = "/fxml/User.fxml";
         Parent root = FXMLLoader.load(getClass().getResource(pathToUserScreen));
