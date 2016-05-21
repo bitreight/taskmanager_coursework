@@ -1,5 +1,7 @@
 package com.bitreight.taskmanager;
 
+import com.bitreight.taskmanager.repository.auth.AuthResult;
+import com.bitreight.taskmanager.repository.auth.Authorization;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;

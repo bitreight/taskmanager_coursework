@@ -1,4 +1,4 @@
-package com.bitreight.taskmanager;
+package com.bitreight.taskmanager.repository.auth;
 
 public class AuthResult {
     public final boolean isValid;

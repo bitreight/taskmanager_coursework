@@ -1,7 +1,7 @@
 package com.bitreight.taskmanager.controllers;
 
-import com.bitreight.taskmanager.AuthResult;
-import com.bitreight.taskmanager.Authorization;
+import com.bitreight.taskmanager.repository.auth.AuthResult;
+import com.bitreight.taskmanager.repository.auth.Authorization;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
