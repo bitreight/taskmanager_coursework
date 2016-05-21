@@ -2,19 +2,15 @@ package com.bitreight.taskmanager.controllers;
 
 import com.bitreight.taskmanager.Authorization;
 import javafx.fxml.FXML;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import javafx.stage.Stage;
-import javafx.fxml.FXMLLoader;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
 
-public class LoginController extends AbstractController {
+public class LoginController {
 
     @Autowired
     private Authorization auth;
@@ -44,7 +40,7 @@ public class LoginController extends AbstractController {
         else {
             //Authorization auth = new Authorization();
             if(auth.login(username, password).isValid) {
-                loadAdmin();
+                ScreensController.loadAdmin();
             }
         }
     }
@@ -52,26 +48,6 @@ public class LoginController extends AbstractController {
     @FXML
     public void textFieldsClick() {
         invalidLabel.setText("");
-    }
-
-    //TODO: should be moved into ScreensController
-    private void loadAdmin() throws IOException {
-        final String pathToAdminScreen = "/fxml/Admin.fxml";
-        Parent root = FXMLLoader.load(getClass().getResource(pathToAdminScreen));
-        Scene scene = new Scene(root);
-        Stage stage = (Stage) loginButton.getScene().getWindow();
-        stage.setScene(scene);
-        stage.show();
-    }
-
-    //TODO: should be moved into ScreensController
-    private void loadUser() throws IOException {
-        final String pathToUserScreen = "/fxml/User.fxml";
-        Parent root = FXMLLoader.load(getClass().getResource(pathToUserScreen));
-        Scene scene = new Scene(root);
-        Stage stage = (Stage) loginButton.getScene().getWindow();
-        stage.setScene(scene);
-        stage.show();
     }
 
     //testable
