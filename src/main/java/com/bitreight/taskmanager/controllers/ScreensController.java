@@ -23,7 +23,7 @@ public class ScreensController {
 
 
     static {
-        screenLoader = new FXMLLoader();
+        //screenLoader = new FXMLLoader();
         mainContext = new ClassPathXmlApplicationContext("/spring/spring-context.xml");
     }
 
@@ -37,7 +37,7 @@ public class ScreensController {
         if(primaryStage == null) {
             return;
         }
-        screenLoader.setLocation(ScreensController.class.getResource(pathToAdminScreen));
+        screenLoader = new FXMLLoader(ScreensController.class.getResource(pathToAdminScreen));
         loadScreen(screenLoader);
     }
 
@@ -45,7 +45,7 @@ public class ScreensController {
         if(primaryStage == null) {
             return;
         }
-        screenLoader.setLocation(ScreensController.class.getResource(pathToUserScreen));
+        screenLoader = new FXMLLoader(ScreensController.class.getResource(pathToUserScreen));
         loadScreen(screenLoader);
     }
 
@@ -53,7 +53,7 @@ public class ScreensController {
         if(primaryStage == null) {
             return;
         }
-        screenLoader.setLocation(ScreensController.class.getResource(pathToLoginScreen));
+        screenLoader = new FXMLLoader(ScreensController.class.getResource(pathToLoginScreen));
         loadScreen(screenLoader);
     }
 
