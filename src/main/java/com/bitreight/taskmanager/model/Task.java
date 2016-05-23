@@ -28,6 +28,8 @@ public class Task {
         setIsCompleted(isCompleted);
     }
 
+    public Task() {}
+
     public int getId() {
         return id.get();
     }
