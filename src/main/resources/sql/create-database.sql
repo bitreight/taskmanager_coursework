@@ -53,6 +53,9 @@ Create User TaskmanagerUser For Login TaskmanagerUser;
 Grant Insert, Select, Update, Delete On Developers To TaskmanagerUser;
 Grant Insert, Select, Update, Delete On Tasks To TaskmanagerUser;
 Grant Insert, Select, Update, Delete On Developers_tasks To TaskmanagerUser;
+Grant Select On dbo.getDevelopers To TaskmanagerUser;
+Grant Select On dbo.getTasks To TaskmanagerUser;
+Grant Select On dbo.getTasksByDeveloper To TaskmanagerUser;
 Grant Execute To TaskmanagerUser;
 Go
 
