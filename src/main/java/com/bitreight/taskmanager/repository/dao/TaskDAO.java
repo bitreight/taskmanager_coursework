@@ -1,13 +1,15 @@
 package com.bitreight.taskmanager.repository.dao;
 
 import com.bitreight.taskmanager.model.Task;
-import javafx.collections.ObservableList;
+
+import java.util.List;
 
 public interface TaskDao {
 
-    public void addTask(Task task);
+    public void createTask(Task task);
     public void updateTask(Task task);
-    public ObservableList<Task> getTasksByDeveloper(int developerId);
+    public List<Task> getTasks();
+    public List<Task> getTasksByDeveloper(int developerId);
     public void deleteTask(int taskId);
     public void assignTask(int taskId, int developerId);
     public void deassignTask(int taskId, int developerId);
