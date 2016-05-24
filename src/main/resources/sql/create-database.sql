@@ -99,7 +99,7 @@ Returns Table
 As 
 Return
 (
-    Select username, dev_name, surname, patronymic, position, is_admin From Developers
+    Select id, username, dev_name, surname, patronymic, position, is_admin From Developers
 )
 Go
 
