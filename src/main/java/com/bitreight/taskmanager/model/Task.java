@@ -1,7 +1,6 @@
 package com.bitreight.taskmanager.model;
 
 import javafx.beans.property.*;
-import javafx.collections.ObservableList;
 
 import java.sql.Date;
 import java.time.LocalDate;
@@ -15,7 +14,7 @@ public class Task {
     private ObjectProperty<LocalDate> deadline;
     private IntegerProperty priority;
     private BooleanProperty isCompleted;
-    private ObservableList<Developer> taskDevelopers;
+    private StringProperty taskDevelopers;
 
     public Task(int id, int number, String name, String description,
                 LocalDate deadline, int priority, boolean isCompleted) {
@@ -118,11 +117,11 @@ public class Task {
         this.isCompleted = new SimpleBooleanProperty(isCompleted);
     }
 
-    public ObservableList<Developer> getTaskDevelopers() {
-        return taskDevelopers;
+    public void setTaskDevelopers(String taskDevelopers) {
+        this.taskDevelopers = new SimpleStringProperty(taskDevelopers);
     }
 
-    public void setTaskDevelopers(ObservableList<Developer> taskDevelopers) {
-        this.taskDevelopers = taskDevelopers;
+    public StringProperty getTaskDevelopers() {
+        return taskDevelopers;
     }
 }
