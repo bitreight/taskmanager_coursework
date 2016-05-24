@@ -96,25 +96,7 @@ public class TaskDaoImpl implements TaskDao {
         SqlParameterSource in = new MapSqlParameterSource()
                 .addValue("dev_id", developerId);
 
-        List<Task> tasks = storedFunctionCall.query(funcQuery, new Object[]{developerId}, new RowMapper<Task>() {
-                    @Override
-                    public Task mapRow(ResultSet rs, int i) throws SQLException {
-
-                        Task task = new Task();
-                        task.setId(rs.getInt("id"));
-                        task.setNumber(rs.getInt("number"));
-                        task.setName(rs.getString("task_name"));
-                        task.setDescription(rs.getString("description"));
-                        task.setDescription(rs.getString("description"));
-                        task.setDeadline(rs.getDate("deadline"));
-                        task.setPriority(rs.getInt("priority"));
-                        task.setIsCompleted(rs.getBoolean("is_completed"));
-
-                        return task;
-                    }
-                });
-
-        return tasks;
+        return storedFunctionCall.query(funcQuery, new Object[]{developerId}, new TaskMapper());
     }
 
     @Override
@@ -135,5 +117,23 @@ public class TaskDaoImpl implements TaskDao {
     @Override
     public void setTaskCompletionByUser(int taskId, int isCompleted) {
 
+    }
+
+    private class TaskMapper implements RowMapper {
+
+        @Override
+        public Task mapRow(ResultSet rs, int i) throws SQLException {
+            Task task = new Task();
+            task.setId(rs.getInt("id"));
+            task.setNumber(rs.getInt("number"));
+            task.setName(rs.getString("task_name"));
+            task.setDescription(rs.getString("description"));
+            task.setDescription(rs.getString("description"));
+            task.setDeadline(rs.getDate("deadline"));
+            task.setPriority(rs.getInt("priority"));
+            task.setIsCompleted(rs.getBoolean("is_completed"));
+
+            return task;
+        }
     }
 }
