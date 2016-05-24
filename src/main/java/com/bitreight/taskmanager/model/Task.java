@@ -33,9 +33,9 @@ public class Task {
         return id.get();
     }
 
-    public IntegerProperty getIdProperty() {
-        return id;
-    }
+//    public IntegerProperty getIdProperty() {
+//        return id;
+//    }
 
     public void setId(int id) {
         this.id = new SimpleIntegerProperty(id);
@@ -81,6 +81,10 @@ public class Task {
         return deadline.get();
     }
 
+    public Date getDeadlineSql() {
+        return Date.valueOf(deadline.get());
+    }
+
     public ObjectProperty<LocalDate> getDeadlineProperty() {
         return deadline;
     }
@@ -109,8 +113,9 @@ public class Task {
         return isCompleted.get();
     }
 
-    public BooleanProperty getIsCompletedProperty() {
-        return isCompleted;
+    public StringProperty getIsCompletedProperty() {
+        return isCompleted.get() ? new SimpleStringProperty("Выполнена") :
+                new SimpleStringProperty("");
     }
 
     public void setIsCompleted(boolean isCompleted) {
