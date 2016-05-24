@@ -16,11 +16,26 @@ public class TestTaskDao extends AbstractJUnit4SpringContextTests {
     private TaskDao taskDao;
 
     @Test
+    public void testCreateTask() {
+
+    }
+
+    @Test
     public void testGetTasksByDeveloper() {
 
         List<Task> tasks = taskDao.getTasksByDeveloper(2);
         for(Task task : tasks) {
             System.out.println(task.getId());
+            System.out.println(task.getDeadline().toString());
+        }
+    }
+
+    @Test
+    public void testGetTasks() {
+        List<Task> tasks = taskDao.getTasks();
+        for(Task task : tasks) {
+            System.out.println(task.getId());
+            System.out.println(task.getDeadline().toString());
         }
     }
 }
