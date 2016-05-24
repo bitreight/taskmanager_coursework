@@ -20,24 +20,21 @@ import java.util.Map;
 @Component
 public class TaskDaoImpl implements TaskDao {
 
-    private JdbcTemplate storedFunctionCall;
-
     private SimpleJdbcCall procCreateTask;
     private SimpleJdbcCall procUpdateTask;
     private SimpleJdbcCall procDeleteTask;
     private SimpleJdbcCall procAssignTask;
     private SimpleJdbcCall procDeassignTask;
     private SimpleJdbcCall procSetTaskCompletionByUser;
+    private JdbcTemplate storedFunctionCall;
 
     @Autowired
     public void setDataSource(DataSource dataSource) {
         this.procCreateTask = new SimpleJdbcCall(dataSource)
-                .withProcedureName("addTask");
+                .withProcedureName("createTask");
 
         this.procUpdateTask = new SimpleJdbcCall(dataSource)
                 .withProcedureName("updateTask");
-
-        this.storedFunctionCall = new JdbcTemplate(dataSource);
 
         this.procDeleteTask = new SimpleJdbcCall(dataSource)
                 .withProcedureName("deleteTask");
@@ -50,33 +47,72 @@ public class TaskDaoImpl implements TaskDao {
 
         this.procSetTaskCompletionByUser = new SimpleJdbcCall(dataSource)
                 .withProcedureName("setCompletionByUser");
+
+        this.storedFunctionCall = new JdbcTemplate(dataSource);
     }
 
     @Override
     public void createTask(Task task) {
+        SqlParameterSource in = new MapSqlParameterSource()
+                .addValue("number", task.getNumber())
+                .addValue("task_name", task.getName())
+                .addValue("description", task.getDescription())
+                .addValue("deadline", task.getDeadlineSql())
+                .addValue("priority", task.getPriority())
+                .addValue("is_completed", task.getIsCompleted());
 
+        try {
+            procCreateTask.execute(in);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void updateTask(Task task) {
+        SqlParameterSource in = new MapSqlParameterSource()
+                .addValue("task_id", task.getId())
+                .addValue("number", task.getNumber())
+                .addValue("task_name", task.getName())
+                .addValue("description", task.getDescription())
+                .addValue("deadline", task.getDeadlineSql())
+                .addValue("priority", task.getPriority())
+                .addValue("is_completed", task.getIsCompleted());
 
+        try {
+            procUpdateTask.execute(in);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public List<Task> getTasks() {
-        return null;
+        List<Task> tasks = null;
+        final String funcQuery = "Select * From getTasks()";
+
+        try {
+            tasks = storedFunctionCall.query(funcQuery, new TaskMapper());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return tasks;
     }
 
     @Override
     public List<Task> getTasksByDeveloper(int developerId) {
-        Map out = null;
-
+        List<Task> tasks = null;
         final String funcQuery = "Select * From getTasksByDeveloper(?)";
 
-        SqlParameterSource in = new MapSqlParameterSource()
-                .addValue("dev_id", developerId);
-
-        return storedFunctionCall.query(funcQuery, new Object[] { developerId }, new TaskMapper());
+        try {
+            tasks = storedFunctionCall
+                    .query(funcQuery, new Object[] { developerId }, new TaskMapper());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return tasks;
     }
 
     @Override
