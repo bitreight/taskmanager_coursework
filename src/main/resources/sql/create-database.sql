@@ -103,6 +103,17 @@ Return
 )
 Go
 
+Create Function getDevelopersByTask(@task_id int)
+Returns Table
+As
+Return
+(
+    Select Developers.id, Developers.dev_name, Developers.surname, Developers.patronymic
+    From Developers Join Developers_Tasks On Developers.id = Developers_Tasks.dev_id
+    Where Developers_Tasks.task_id = @task_id
+)
+Go
+
 Create Procedure deleteDeveloper
     @dev_id int
 As
