@@ -39,26 +39,6 @@ public class TaskDaoImpl implements TaskDao {
 
         this.storedFunctionCall = new JdbcTemplate(dataSource);
 
-//        this.funcGetTasksByDeveloper = new SimpleJdbcCall(dataSource)
-//                .withFunctionName("getTasksByDeveloper")
-//                .returningResultSet("tasksOfDeveloper", new RowMapper<Task>() {
-//                    @Override
-//                    public Task mapRow(ResultSet rs, int i) throws SQLException {
-//
-//                        Task task = new Task();
-//                        task.setId(rs.getInt("id"));
-//                        task.setNumber(rs.getInt("number"));
-//                        task.setName(rs.getString("task_name"));
-//                        task.setDescription(rs.getString("description"));
-//                        task.setDescription(rs.getString("description"));
-//                        task.setDeadline(rs.getDate("deadline"));
-//                        task.setPriority(rs.getInt("priority"));
-//                        task.setIsCompleted(rs.getBoolean("is_completed"));
-//
-//                        return task;
-//                    }
-//                });
-
         this.procDeleteTask = new SimpleJdbcCall(dataSource)
                 .withProcedureName("deleteTask");
 
@@ -96,7 +76,7 @@ public class TaskDaoImpl implements TaskDao {
         SqlParameterSource in = new MapSqlParameterSource()
                 .addValue("dev_id", developerId);
 
-        return storedFunctionCall.query(funcQuery, new Object[]{developerId}, new TaskMapper());
+        return storedFunctionCall.query(funcQuery, new Object[] { developerId }, new TaskMapper());
     }
 
     @Override
@@ -132,6 +112,7 @@ public class TaskDaoImpl implements TaskDao {
             task.setDeadline(rs.getDate("deadline"));
             task.setPriority(rs.getInt("priority"));
             task.setIsCompleted(rs.getBoolean("is_completed"));
+            task.setTaskDevelopers(rs.getString("dev_name"));
 
             return task;
         }
