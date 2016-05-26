@@ -4,17 +4,20 @@ import javafx.beans.property.*;
 
 import java.sql.Date;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Task {
 
-    private IntegerProperty id;
+    private int id;
     private IntegerProperty number;
     private StringProperty name;
-    private StringProperty description;
+    private String description;
     private ObjectProperty<LocalDate> deadline;
-    private IntegerProperty priority;
-    private BooleanProperty isCompleted;
-    private StringProperty taskDevelopers;
+    private int priority;
+    private boolean isCompleted;
+    //private StringProperty taskDevelopers;
+    private List<Developer> taskDevelopers = new ArrayList<Developer>();
 
     public Task(int id, int number, String name, String description,
                 LocalDate deadline, int priority, boolean isCompleted) {
@@ -30,15 +33,11 @@ public class Task {
     public Task() {}
 
     public int getId() {
-        return id.get();
+        return id;
     }
 
-//    public IntegerProperty getIdProperty() {
-//        return id;
-//    }
-
     public void setId(int id) {
-        this.id = new SimpleIntegerProperty(id);
+        this.id = id;
     }
 
     public int getNumber() {
@@ -66,15 +65,11 @@ public class Task {
     }
 
     public String getDescription() {
-        return description.get();
-    }
-
-    public StringProperty getDescriptionProperty() {
         return description;
     }
 
     public void setDescription(String description) {
-        this.description = new SimpleStringProperty(description);
+        this.description = description;
     }
 
     public LocalDate getDeadline() {
@@ -98,35 +93,41 @@ public class Task {
     }
 
     public int getPriority() {
-        return priority.get();
-    }
-
-    public IntegerProperty getPriorityProperty() {
         return priority;
     }
 
-    public void setPriority(int priority) {
-        this.priority = new SimpleIntegerProperty(priority);
+    public StringProperty getPriorityProperty() {
+        switch(priority) {
+            case 1: return new SimpleStringProperty("Высокий");
+            case 2: return new SimpleStringProperty("Средний");
+            case 3: return new SimpleStringProperty("Низкий");
+            default: return new SimpleStringProperty("");
+        }
     }
 
-    public Boolean getIsCompleted() {
-        return isCompleted.get();
+    public void setPriority(int priority) {
+        this.priority = priority;
+    }
+
+    public boolean getIsCompleted() {
+        return isCompleted;
     }
 
     public StringProperty getIsCompletedProperty() {
-        return isCompleted.get() ? new SimpleStringProperty("Выполнена") :
+        return isCompleted ? new SimpleStringProperty("Выполнена") :
                 new SimpleStringProperty("");
     }
 
     public void setIsCompleted(boolean isCompleted) {
-        this.isCompleted = new SimpleBooleanProperty(isCompleted);
+        this.isCompleted = isCompleted;
     }
 
-    public void setTaskDevelopers(String taskDevelopers) {
-        this.taskDevelopers = new SimpleStringProperty(taskDevelopers);
+    public void setTaskDevelopers(List<Developer> taskDevelopers) {
+        //this.taskDevelopers = new SimpleStringProperty(taskDevelopers);
+        this.taskDevelopers = taskDevelopers;
     }
 
-    public StringProperty getTaskDevelopers() {
+    public List<Developer> getTaskDevelopers() {
         return taskDevelopers;
     }
 }
