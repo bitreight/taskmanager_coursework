@@ -10,8 +10,8 @@ import java.util.List;
 public class Task {
 
     private int id;
-    private IntegerProperty number;
-    private StringProperty name;
+    private int number;
+    private String name;
     private String description;
     private ObjectProperty<LocalDate> deadline;
     private int priority;
@@ -41,27 +41,27 @@ public class Task {
     }
 
     public int getNumber() {
-        return number.get();
-    }
-
-    public IntegerProperty getNumberProperty() {
         return number;
     }
 
+    public IntegerProperty getNumberProperty() {
+        return new SimpleIntegerProperty(number);
+    }
+
     public void setNumber(int number) {
-        this.number = new SimpleIntegerProperty(number);
+        this.number = number;
     }
 
     public String getName() {
-        return name.get();
-    }
-
-    public StringProperty getNameProperty() {
         return name;
     }
 
+    public StringProperty getNameProperty() {
+        return new SimpleStringProperty(name);
+    }
+
     public void setName(String name) {
-        this.name = new SimpleStringProperty(name);
+        this.name = name;
     }
 
     public String getDescription() {
@@ -123,7 +123,6 @@ public class Task {
     }
 
     public void setTaskDevelopers(List<Developer> taskDevelopers) {
-        //this.taskDevelopers = new SimpleStringProperty(taskDevelopers);
         this.taskDevelopers = taskDevelopers;
     }
 
