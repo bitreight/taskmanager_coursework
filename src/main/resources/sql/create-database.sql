@@ -49,16 +49,6 @@ Begin
 End
 Create User TaskmanagerUser For Login TaskmanagerUser;
 
---------Grant permissions to created user---------
-Grant Insert, Select, Update, Delete On Developers To TaskmanagerUser;
-Grant Insert, Select, Update, Delete On Tasks To TaskmanagerUser;
-Grant Insert, Select, Update, Delete On Developers_tasks To TaskmanagerUser;
-Grant Select On dbo.getDevelopers To TaskmanagerUser;
-Grant Select On dbo.getTasks To TaskmanagerUser;
-Grant Select On dbo.getTasksByDeveloper To TaskmanagerUser;
-Grant Execute To TaskmanagerUser;
-Go
-
 --------Programmability creation--------
 Create Procedure createDeveloper
     @username nvarchar(10), 
@@ -157,7 +147,6 @@ End
 Go
 
 --This function finds developers having the selected task and concat their full names into one row.
---It is to be called from getTasks() procedure.
 Create Function selectConcat(@task_id int)
 Returns nvarchar(MAX)
 As
@@ -173,15 +162,24 @@ Begin
 End
 Go
 
---This function returns all the tasks and developers of each task concated in one row.
-Create Function getTasks()
+Create Function getAllTasks()
 Returns Table
 As 
 Return
 (
-    Select Tasks.*, dbo.selectConcat(Tasks.id) As dev_name  From Tasks 
-    Left Join Developers_Tasks On Tasks.id = Developers_Tasks.task_id
-    Group By Tasks.id, Tasks.number, Tasks.task_name, Tasks.[description], Tasks.deadline, Tasks.[priority], Tasks.is_completed
+    Select Tasks.*, Developers.id as dev_id, Developers.dev_name, Developers.surname, Developers.patronymic
+    From Tasks Left Join Developers_Tasks On Tasks.id = Developers_Tasks.task_id
+               Left Join Developers On Developers.id = Developers_Tasks.dev_id   
+)
+Go
+
+Create Function getIncompletedTasks()
+Returns Table
+As
+Return
+(
+    Select * From getAllTasks() tasks
+    Where tasks.is_completed = 0
 )
 Go
 
@@ -190,11 +188,20 @@ Returns Table
 As 
 Return
 (
-    Select Top 100 percent Tasks.*, Developers.dev_name, Developers.surname, Developers.patronymic From Tasks 
-    Join Developers_Tasks On Tasks.id = Developers_Tasks.task_id
-    Join Developers On Developers.id = Developers_Tasks.dev_id
-    Where Developers.id = @dev_id
-    Order By Tasks.id
+    Select Tasks.*, Developers.id as dev_id, Developers.dev_name, Developers.surname, Developers.patronymic
+    From Tasks Join Developers_Tasks On Tasks.id = Developers_Tasks.task_id
+               Join Developers On Developers.id = Developers_Tasks.dev_id
+    Where Developers.id = @dev_id    
+)
+Go
+
+Create Function getIncompletedTasksByDeveloper(@dev_id int)
+Returns Table
+As 
+Return
+(
+    Select * From getTasksByDeveloper(@dev_id) tasks
+    Where tasks.is_completed = 0
 )
 Go
 
@@ -369,6 +376,18 @@ Begin
             Print 'Выбранному разработчику уже назначено 3 задачи.'
         End
 End
+Go
+
+--------Grant permissions to created user---------
+Grant Insert, Select, Update, Delete On Developers To TaskmanagerUser;
+Grant Insert, Select, Update, Delete On Tasks To TaskmanagerUser;
+Grant Insert, Select, Update, Delete On Developers_tasks To TaskmanagerUser;
+Grant Select On dbo.getDevelopers To TaskmanagerUser;
+Grant Select On dbo.getAllTasks To TaskmanagerUser;
+Grant Select On dbo.getIncompletedTasks To TaskmanagerUser;
+Grant Select On dbo.getTasksByDeveloper To TaskmanagerUser;
+Grant Select On dbo.getIncompletedTasksByDeveloper To TaskmanagerUser;
+Grant Execute To TaskmanagerUser;
 Go
 
 --Add default admin of the project 
