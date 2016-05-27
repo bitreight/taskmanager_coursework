@@ -12,8 +12,6 @@ import org.springframework.stereotype.Component;
 import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -46,13 +44,15 @@ public class TaskDaoImpl implements TaskDao {
                 .withProcedureName("deassignTask");
 
         this.procSetTaskCompletionByUser = new SimpleJdbcCall(dataSource)
-                .withProcedureName("setCompletionByUser");
+                .withProcedureName("setTaskCompletionByUser");
 
         this.storedFunctionCall = new JdbcTemplate(dataSource);
     }
 
     @Override
-    public void createTask(Task task) {
+    public int createTask(Task task) {
+        Map out = null;
+
         SqlParameterSource in = new MapSqlParameterSource()
                 .addValue("number", task.getNumber())
                 .addValue("task_name", task.getName())
@@ -62,11 +62,12 @@ public class TaskDaoImpl implements TaskDao {
                 .addValue("is_completed", task.getIsCompleted());
 
         try {
-            procCreateTask.execute(in);
+            out = procCreateTask.execute(in);
         }
         catch (Exception e) {
             e.printStackTrace();
         }
+        return (out != null ? (int) out.get("identity") : 0);
     }
 
     @Override
@@ -88,8 +89,9 @@ public class TaskDaoImpl implements TaskDao {
         }
     }
 
+    //TODO
     @Override
-    public List<Task> getTasks() {
+    public List<Task> getAllTasks() {
         List<Task> tasks = null;
         final String funcQuery = "Select * From getTasks()";
 
@@ -101,6 +103,13 @@ public class TaskDaoImpl implements TaskDao {
         return tasks;
     }
 
+    //TODO
+    @Override
+    public List<Task> getIncompletedTasks() {
+        return null;
+    }
+
+    //TODO
     @Override
     public List<Task> getTasksByDeveloper(int developerId) {
         List<Task> tasks = null;
@@ -115,24 +124,65 @@ public class TaskDaoImpl implements TaskDao {
         return tasks;
     }
 
+    //TODO
+    @Override
+    public List<Task> getIncompletedTasksByDeveloper(int developerId) {
+        return null;
+    }
+
     @Override
     public void deleteTask(int taskId) {
+        SqlParameterSource in = new MapSqlParameterSource()
+                .addValue("task_id", taskId);
 
+        try {
+            procDeleteTask.execute(in);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void assignTask(int taskId, int developerId) {
+        SqlParameterSource in = new MapSqlParameterSource()
+                .addValue("task_id", taskId)
+                .addValue("dev_id", developerId);
 
+        try {
+            procAssignTask.execute(in);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void deassignTask(int taskId, int developerId) {
+        SqlParameterSource in = new MapSqlParameterSource()
+                .addValue("task_id", taskId)
+                .addValue("dev_id", developerId);
 
+        try {
+            procDeassignTask.execute(in);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
-    public void setTaskCompletionByUser(int taskId, int isCompleted) {
+    public void setTaskCompletionByUser(int taskId, boolean isCompleted) {
+        SqlParameterSource in = new MapSqlParameterSource()
+                .addValue("task_id", taskId)
+                .addValue("is_completed", isCompleted);
 
+        try {
+            procSetTaskCompletionByUser.execute(in);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private class TaskMapper implements RowMapper {
@@ -148,7 +198,7 @@ public class TaskDaoImpl implements TaskDao {
             task.setDeadline(rs.getDate("deadline"));
             task.setPriority(rs.getInt("priority"));
             task.setIsCompleted(rs.getBoolean("is_completed"));
-            task.setTaskDevelopers(rs.getString("dev_name"));
+            //task.setTaskDevelopers(rs.getString("dev_name"));
 
             return task;
         }
