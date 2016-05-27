@@ -277,7 +277,7 @@ As
 Begin
     Set Nocount On;
     If (Select Count(*) From Developers 
-        Where Developers.username = (Select i.username From (Select * From inserted) i)) = 2
+        Where Developers.username = (Select i.username From inserted i)) = 2
         Begin
             Rollback Transaction
             Print 'Указанное имя входа существует в базе данных.'
@@ -363,20 +363,20 @@ As
 Begin
     Set Nocount On;
     If (Select Count(*) From Developers_Tasks 
-        Where Developers_Tasks.task_id = (Select i.task_id From (Select * From inserted) i) and 
-              Developers_Tasks.dev_id = (Select i.dev_id From (Select * From inserted) i)) = 2
+        Where Developers_Tasks.task_id = (Select i.task_id From inserted i) and 
+              Developers_Tasks.dev_id = (Select i.dev_id From inserted i)) = 2
         Begin
             Rollback Transaction
             Print 'Данная задача уже назначена этому разработчику.'
         End
     Else If (Select Count(*) From Developers_Tasks 
-             Where Developers_Tasks.task_id = (Select i.task_id From (Select * From inserted) i)) = 3
+             Where Developers_Tasks.task_id = (Select i.task_id From inserted i)) = 3
         Begin
             Rollback Transaction
             Print 'Данная задача уже назначена двум разработчикам.'
         End
     Else if (Select Count(*) From Developers_Tasks 
-             Where Developers_Tasks.dev_id = (Select i.dev_id From (Select * From inserted) i)) = 4
+             Where Developers_Tasks.dev_id = (Select i.dev_id From inserted i)) = 4
         Begin
             Rollback Transaction
             Print 'Выбранному разработчику уже назначено 3 задачи.'
