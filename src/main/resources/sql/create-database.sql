@@ -325,15 +325,16 @@ Go
 
 --At first trigger checks if there is a task number in the table 'Tasks' as the task number is to be added.
 --At second trigger checks if there are 2 tasks with the highest priority (1) in the table 'Tasks'.
+--At third trigger checks if deadline is later than current date.
 --Trigger fires when inserting in the table or updating table 'Tasks'.
-Create Trigger checkTaskNumberAndPriorityTrigger
+Create Trigger checkCreateOrUpdateTaskTrigger
     On Tasks
     For Insert, Update
 As
 Begin
     Set Nocount On;
     If (Select Count(*) From Tasks 
-        Where Tasks.number = (Select i.number From (Select * From inserted) i)) = 2
+        Where Tasks.number = (Select i.number From inserted i)) = 2
         Begin
             Rollback Transaction
             Print 'Задача с таким номером существует в базе данных.'
@@ -343,6 +344,11 @@ Begin
         Begin
             Rollback Transaction
             Print 'В списке уже имеется две задачи с наивысшим приоритетом.'
+        End
+    Else If((Select i.deadline From inserted i) < Convert(date, GETDATE()))
+        Begin
+            Rollback Transaction
+            Print 'Срок выполнения задачи не может быть раньше текущей даты.'
         End
 End
 Go
@@ -397,7 +403,7 @@ Insert Into Developers Values('admin', HASHBYTES('SHA2_256', 'password'), 'Ку�
 --Delete From Developers;
 --Execute deleteDeveloper 4;
 
---Execute createTask 100,'task2','testtask','01-01-2016', 3, 0;
+--Execute createTask 102,'task2','testtask','05-26-2016', 3, 0;
 --Delete From Tasks;
 
 --Execute assignTask 4, 2;
