@@ -48,6 +48,7 @@ Begin
     Create Login TaskmanagerUser With Password = 'Qwerty123';
 End
 Create User TaskmanagerUser For Login TaskmanagerUser;
+Go
 
 --------Programmability creation--------
 Create Procedure createDeveloper
@@ -57,11 +58,13 @@ Create Procedure createDeveloper
     @surname nvarchar(20),
     @patronymic nvarchar(20),
     @position nvarchar(50),
-    @is_admin bit
+    @is_admin bit,
+    @identity int OUTPUT
 As
 Begin
     Set Nocount On;
     Insert Into Developers Values (@username, @password, @dev_name, @surname, @patronymic, @position, @is_admin);
+    Select @identity = @@IDENTITY
 End
 Go
 
@@ -93,16 +96,16 @@ Return
 )
 Go
 
-Create Function getDevelopersByTask(@task_id int)
-Returns Table
-As
-Return
-(
-    Select Developers.id, Developers.dev_name, Developers.surname, Developers.patronymic
-    From Developers Join Developers_Tasks On Developers.id = Developers_Tasks.dev_id
-    Where Developers_Tasks.task_id = @task_id
-)
-Go
+--Create Function getDevelopersByTask(@task_id int)
+--Returns Table
+--As
+--Return
+--(
+--    Select Developers.id, Developers.dev_name, Developers.surname, Developers.patronymic
+--    From Developers Join Developers_Tasks On Developers.id = Developers_Tasks.dev_id
+--    Where Developers_Tasks.task_id = @task_id
+--)
+--Go
 
 Create Procedure deleteDeveloper
     @dev_id int
@@ -119,11 +122,13 @@ Create Procedure createTask
     @description nvarchar(500),
     @deadline date,
     @priority int = 3,
-    @is_completed bit = 0
+    @is_completed bit = 0,
+    @identity int OUTPUT
 As
 Begin
     Set Nocount On;
     Insert Into Tasks Values (@number, @task_name, @description, @deadline, @priority, @is_completed);
+    Select @identity = @@IDENTITY
 End
 Go
 
@@ -147,20 +152,20 @@ End
 Go
 
 --This function finds developers having the selected task and concat their full names into one row.
-Create Function selectConcat(@task_id int)
-Returns nvarchar(MAX)
-As
-Begin
-    Declare @result nvarchar(MAX) = '';
-    Select @result = @result + task_dev.dev_name + ' ' + 
-                               Left(task_dev.surname, 1) + '.' +
-                               Left(task_dev.patronymic, 1) + '. '
-    From (Select Developers_Tasks.task_id, Developers.dev_name, Developers.surname, Developers.patronymic 
-            From Developers_Tasks Join Developers On Developers_Tasks.dev_id = Developers.id) task_dev
-    Where task_dev.task_id = @task_id;
-    Return @result;
-End
-Go
+--Create Function selectConcat(@task_id int)
+--Returns nvarchar(MAX)
+--As
+--Begin
+--    Declare @result nvarchar(MAX) = '';
+--    Select @result = @result + task_dev.dev_name + ' ' + 
+--                               Left(task_dev.surname, 1) + '.' +
+--                               Left(task_dev.patronymic, 1) + '. '
+--    From (Select Developers_Tasks.task_id, Developers.dev_name, Developers.surname, Developers.patronymic 
+--            From Developers_Tasks Join Developers On Developers_Tasks.dev_id = Developers.id) task_dev
+--    Where task_dev.task_id = @task_id;
+--    Return @result;
+--End
+--Go
 
 Create Function getAllTasks()
 Returns Table
@@ -399,12 +404,12 @@ Go
 --Add default admin of the project 
 Insert Into Developers Values('admin', HASHBYTES('SHA2_256', 'password'), 'Курчевский', 'Алексей', 'Александрович', 'Project manager', 1);
 
---Execute createDeveloper 'test2',123,'name','surname','patronymic','test',0;
+--Declare @test int;
+--Execute createDeveloper 'test4',123,'name','surname','patronymic','test',0, @test output;
+
 --Delete From Developers;
 --Execute deleteDeveloper 4;
 
---Execute createTask 102,'task2','testtask','05-26-2016', 3, 0;
+--Execute createTask 103,'task2','testtask','05-28-2016', 4, 0, @test output;
 --Delete From Tasks;
-
---Execute assignTask 4, 2;
---Delete From Developers_Tasks;
+--Select @test;
