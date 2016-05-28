@@ -99,7 +99,6 @@ public class TaskDaoImpl implements TaskDao {
         }
     }
 
-    //TODO
     @Override
     public List<Task> getAllTasks() {
         List<Task> tasks;
@@ -107,31 +106,27 @@ public class TaskDaoImpl implements TaskDao {
         return tasks;
     }
 
-    //TODO
     @Override
     public List<Task> getIncompletedTasks() {
-        return null;
-    }
-
-    //TODO
-    @Override
-    public List<Task> getTasksByDeveloper(int developerId) {
-        List<Task> tasks = null;
-        final String funcQuery = "Select * From getTasksByDeveloper(?)";
-
-        try {
-            tasks = storedFunctionCall
-                    .query(funcQuery, new Object[] { developerId }, new TaskMapper());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        List<Task> tasks;
+        tasks = storedFunctionCall.query(getIncompletedTasks, new TaskSetExtractor());
         return tasks;
     }
 
-    //TODO
+    @Override
+    public List<Task> getTasksByDeveloper(int developerId) {
+        List<Task> tasks;
+        tasks = storedFunctionCall.
+                query(getTasksByDeveloper, new Object[] { developerId }, new TaskSetExtractor());
+        return tasks;
+    }
+
     @Override
     public List<Task> getIncompletedTasksByDeveloper(int developerId) {
-        return null;
+        List<Task> tasks;
+        tasks = storedFunctionCall.
+                query(getIncompletedTasksByDeveloper, new Object[] { developerId }, new TaskSetExtractor());
+        return tasks;
     }
 
     @Override
@@ -224,22 +219,22 @@ public class TaskDaoImpl implements TaskDao {
         }
     }
 
-    private class TaskMapper implements RowMapper {
-
-        @Override
-        public Task mapRow(ResultSet rs, int i) throws SQLException {
-            Task task = new Task();
-            task.setId(rs.getInt("id"));
-            task.setNumber(rs.getInt("number"));
-            task.setName(rs.getString("task_name"));
-            task.setDescription(rs.getString("description"));
-            task.setDescription(rs.getString("description"));
-            task.setDeadline(rs.getDate("deadline"));
-            task.setPriority(rs.getInt("priority"));
-            task.setIsCompleted(rs.getBoolean("is_completed"));
-            //task.setTaskDevelopers(rs.getString("dev_name"));
-
-            return task;
-        }
-    }
+//    private class TaskMapper implements RowMapper {
+//
+//        @Override
+//        public Task mapRow(ResultSet rs, int i) throws SQLException {
+//            Task task = new Task();
+//            task.setId(rs.getInt("id"));
+//            task.setNumber(rs.getInt("number"));
+//            task.setName(rs.getString("task_name"));
+//            task.setDescription(rs.getString("description"));
+//            task.setDescription(rs.getString("description"));
+//            task.setDeadline(rs.getDate("deadline"));
+//            task.setPriority(rs.getInt("priority"));
+//            task.setIsCompleted(rs.getBoolean("is_completed"));
+//            //task.setTaskDevelopers(rs.getString("dev_name"));
+//
+//            return task;
+//        }
+//    }
 }
