@@ -1,8 +1,11 @@
 package com.bitreight.taskmanager.repository.dao;
 
+import com.bitreight.taskmanager.model.Developer;
 import com.bitreight.taskmanager.model.Task;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
@@ -12,6 +15,8 @@ import org.springframework.stereotype.Component;
 import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -24,7 +29,12 @@ public class TaskDaoImpl implements TaskDao {
     private SimpleJdbcCall procAssignTask;
     private SimpleJdbcCall procDeassignTask;
     private SimpleJdbcCall procSetTaskCompletionByUser;
+
     private JdbcTemplate storedFunctionCall;
+    private final String getAllTasks = "Select * From getAllTasks()";
+    private final String getIncompletedTasks = "Select * From getIncompletedTasks()";
+    private final String getTasksByDeveloper = "Select * From getTasksByDeveloper(?)";
+    private final String getIncompletedTasksByDeveloper = "Select * From getIncompletedTasksByDeveloper(?)";
 
     @Autowired
     public void setDataSource(DataSource dataSource) {
@@ -92,14 +102,8 @@ public class TaskDaoImpl implements TaskDao {
     //TODO
     @Override
     public List<Task> getAllTasks() {
-        List<Task> tasks = null;
-        final String funcQuery = "Select * From getTasks()";
-
-        try {
-            tasks = storedFunctionCall.query(funcQuery, new TaskMapper());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        List<Task> tasks;
+        tasks = storedFunctionCall.query(getAllTasks, new TaskSetExtractor());
         return tasks;
     }
 
@@ -182,6 +186,41 @@ public class TaskDaoImpl implements TaskDao {
         }
         catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    private class TaskSetExtractor implements ResultSetExtractor<List<Task>> {
+
+        @Override
+        public List<Task> extractData(ResultSet rs) throws SQLException, DataAccessException {
+            Map<Integer, Task> map = new HashMap<Integer, Task>();
+            Task task;
+            while (rs.next()) {
+                Integer id = rs.getInt("id");
+                task = map.get(id);
+                if (task == null) {
+                    task = new Task();
+                    task.setId(id);
+                    task.setNumber(rs.getInt("number"));
+                    task.setName(rs.getString("task_name"));
+                    task.setDescription(rs.getString("description"));
+                    task.setDescription(rs.getString("description"));
+                    task.setDeadline(rs.getDate("deadline"));
+                    task.setPriority(rs.getInt("priority"));
+                    task.setIsCompleted(rs.getBoolean("is_completed"));
+                    map.put(id, task);
+                }
+                Integer developerId = rs.getInt("dev_id");
+                if (developerId != 0) {
+                    Developer developer = new Developer();
+                    developer.setId(developerId);
+                    developer.setName(rs.getString("dev_name"));
+                    developer.setSurname(rs.getString("surname"));
+                    developer.setPatronymic(rs.getString("patronymic"));
+                    task.addDeveloper(developer);
+                }
+            }
+            return new ArrayList<Task>(map.values());
         }
     }
 
