@@ -410,6 +410,7 @@ Insert Into Developers Values('admin', HASHBYTES('SHA2_256', 'password'), 'Ку�
 --Delete From Developers;
 --Execute deleteDeveloper 4;
 
---Execute createTask 103,'task2','testtask','05-28-2016', 4, 0, @test output;
+--Declare @test int;
+--Execute createTask 100,'task2','testtask','05-28-2016', 3, 0, @test output;
 --Delete From Tasks;
 --Select @test;
