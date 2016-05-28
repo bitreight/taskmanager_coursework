@@ -1,5 +1,6 @@
 package com.bitreight.taskmanager.repository.dao;
 
+import com.bitreight.taskmanager.exceptions.DeveloperDaoException;
 import com.bitreight.taskmanager.model.Developer;
 import com.bitreight.taskmanager.repository.auth.Security;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +10,6 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcCall;
-import org.springframework.jdbc.datasource.init.UncategorizedScriptException;
 import org.springframework.stereotype.Component;
 
 import javax.sql.DataSource;
@@ -45,7 +45,7 @@ public class DeveloperDaoImpl implements DeveloperDao {
     }
 
     @Override
-    public int createDeveloper(Developer developer) {
+    public int createDeveloper(Developer developer) throws DeveloperDaoException {
         Map out = null;
 
         SqlParameterSource in = new MapSqlParameterSource()
@@ -60,7 +60,7 @@ public class DeveloperDaoImpl implements DeveloperDao {
         try {
             out = procCreateDeveloper.execute(in);
         } catch (UncategorizedSQLException e) {
-            //throw custom
+            throw new DeveloperDaoException(e.getSQLException().getMessage());
         } catch (Exception e) {
             e.getMessage();
         }
@@ -99,7 +99,7 @@ public class DeveloperDaoImpl implements DeveloperDao {
     }
 
     @Override
-    public boolean updateCredentials(int developerId, String username, String password) {
+    public boolean updateCredentials(int developerId, String username, String password) throws DeveloperDaoException {
         SqlParameterSource in = new MapSqlParameterSource()
                 .addValue("dev_id", developerId)
                 .addValue("username", username)
@@ -109,8 +109,7 @@ public class DeveloperDaoImpl implements DeveloperDao {
             procUpdateCredentials.execute(in);
             return true;
         } catch(UncategorizedSQLException e) {
-            //throw custom
-            return false;
+            throw new DeveloperDaoException(e.getSQLException().getMessage());
         } catch (Exception e) {
             e.getMessage();
             return false;
