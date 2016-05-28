@@ -28,7 +28,7 @@ public class Authorization {
 
         SqlParameterSource in = new MapSqlParameterSource()
                 .addValue("username", username)
-                .addValue("password", hashPasswordSHA256(password));
+                .addValue("password", Security.hashPasswordSHA256(password));
 
         try {
             out = procCheckCredentials.execute(in);
@@ -43,20 +43,4 @@ public class Authorization {
         return new AuthResult(isValid, isAdmin);
     }
 
-    private byte[] hashPasswordSHA256(String password)  {
-        MessageDigest md = null;
-        try {
-            md = MessageDigest.getInstance("SHA-256");
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        }
-        try {
-            if (md != null) {
-                md.update(password.getBytes("UTF-8"));
-            }
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        return md != null ? md.digest() : new byte[0];
-    }
 }
