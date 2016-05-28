@@ -7,8 +7,9 @@ import java.util.List;
 public interface DeveloperDao {
 
     public int createDeveloper(Developer developer);
-    public void updateDeveloper(Developer developer);
     public List<Developer> getDevelopers();
-    public void deleteDeveloper(int developerId);
+    public boolean updateDeveloper(Developer developer);
+    public boolean updateCredentials(int developerId, String username, String password);
+    public boolean deleteDeveloper(int developerId);
 
 }
