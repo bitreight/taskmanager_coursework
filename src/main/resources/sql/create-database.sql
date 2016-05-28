@@ -70,8 +70,6 @@ Go
 
 Create Procedure updateDeveloper
     @dev_id int,
-    @username nvarchar(10), 
-    @password binary(32),
     @dev_name nvarchar(20),
     @surname nvarchar(20),
     @patronymic nvarchar(20),
@@ -81,11 +79,24 @@ As
 Begin
     Set Nocount On;
     Update Developers
-    Set username = @username, [password] = @password, dev_name = @dev_name, surname = @surname,
+    Set dev_name = @dev_name, surname = @surname,
         patronymic = @patronymic, position = @position, is_admin = @is_admin
     Where id = @dev_id;	
 End
-Go	
+Go
+
+Create Procedure updateCredentials
+	@dev_id int,
+    @username nvarchar(10), 
+    @password binary(32)
+As
+Begin
+    Set Nocount On;
+    Update Developers
+    Set username = @username, [password] = @password
+    Where id = @dev_id;	
+End
+Go
 
 Create Function getDevelopers()
 Returns Table
@@ -285,7 +296,7 @@ Begin
         Where Developers.username = (Select i.username From inserted i)) = 2
         Begin
             Rollback Transaction
-            Print 'Указанное имя входа существует в базе данных.'
+            RAISERROR(60010, 16, 1); --Указанное имя входа существует в базе данных.
         End                
 End
 Go
@@ -342,18 +353,18 @@ Begin
         Where Tasks.number = (Select i.number From inserted i)) = 2
         Begin
             Rollback Transaction
-            Print 'Задача с таким номером существует в базе данных.'
+            RAISERROR(60020, 16, 1); --Задача с таким номером существует в базе данных.
         End
     Else If((Select i.[priority] From inserted i) = 1) and
         ((Select Count(*) From Tasks Where [priority] = 1) = 3)
         Begin
             Rollback Transaction
-            Print 'В списке уже имеется две задачи с наивысшим приоритетом.'
+            RAISERROR(60021, 16, 1); --В списке уже имеется две задачи с наивысшим приоритетом.            
         End
     Else If((Select i.deadline From inserted i) < Convert(date, GETDATE()))
         Begin
             Rollback Transaction
-            Print 'Срок выполнения задачи не может быть раньше текущей даты.'
+            RAISERROR(60022, 16, 1); --Срок выполнения задачи не может быть раньше текущей даты.
         End
 End
 Go
@@ -372,19 +383,19 @@ Begin
               Developers_Tasks.dev_id = (Select i.dev_id From inserted i)) = 2
         Begin
             Rollback Transaction
-            Print 'Данная задача уже назначена этому разработчику.'
+            RAISERROR(60023, 16, 1); --Данная задача уже назначена этому разработчику.
         End
     Else If (Select Count(*) From Developers_Tasks 
              Where Developers_Tasks.task_id = (Select i.task_id From inserted i)) = 3
         Begin
             Rollback Transaction
-            Print 'Данная задача уже назначена двум разработчикам.'
+            RAISERROR(60024, 16, 1); --Данная задача уже назначена двум разработчикам.
         End
     Else if (Select Count(*) From Developers_Tasks 
              Where Developers_Tasks.dev_id = (Select i.dev_id From inserted i)) = 4
         Begin
             Rollback Transaction
-            Print 'Выбранному разработчику уже назначено 3 задачи.'
+            RAISERROR(60025, 16, 1); --Выбранному разработчику уже назначено 3 задачи.
         End
 End
 Go
@@ -403,6 +414,15 @@ Go
 
 --Add default admin of the project 
 Insert Into Developers Values('admin', HASHBYTES('SHA2_256', 'password'), 'Курчевский', 'Алексей', 'Александрович', 'Project manager', 1);
+
+--Add error messages
+EXEC sys.sp_addmessage 60010, 16, 'Указанное имя входа существует в базе данных.', @replace = 'REPLACE';
+EXEC sys.sp_addmessage 60020, 16, 'Задача с таким номером существует в базе данных.', @replace = 'REPLACE';
+EXEC sys.sp_addmessage 60021, 16, 'В списке уже имеется две задачи с наивысшим приоритетом.', @replace = 'REPLACE';
+EXEC sys.sp_addmessage 60022, 16, 'Срок выполнения задачи не может быть раньше текущей даты.', @replace = 'REPLACE';
+EXEC sys.sp_addmessage 60023, 16, 'Данная задача уже назначена этому разработчику.', @replace = 'REPLACE';
+EXEC sys.sp_addmessage 60024, 16, 'Данная задача уже назначена двум разработчикам.', @replace = 'REPLACE';
+EXEC sys.sp_addmessage 60025, 16, 'Выбранному разработчику уже назначено 3 задачи.', @replace = 'REPLACE';
 
 --Declare @test int;
 --Execute createDeveloper 'test4',123,'name','surname','patronymic','test',0, @test output;
