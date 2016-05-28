@@ -16,21 +16,7 @@ public class Task {
     private ObjectProperty<LocalDate> deadline;
     private int priority;
     private boolean isCompleted;
-    //private StringProperty taskDevelopers;
     private List<Developer> taskDevelopers = new ArrayList<Developer>();
-
-    public Task(int id, int number, String name, String description,
-                LocalDate deadline, int priority, boolean isCompleted) {
-        setId(id);
-        setNumber(number);
-        setName(name);
-        setDescription(description);
-        setDeadline(deadline);
-        setPriority(priority);
-        setIsCompleted(isCompleted);
-    }
-
-    public Task() {}
 
     public int getId() {
         return id;
@@ -122,11 +108,26 @@ public class Task {
         this.isCompleted = isCompleted;
     }
 
-    public void setTaskDevelopers(List<Developer> taskDevelopers) {
-        this.taskDevelopers = taskDevelopers;
+    public void addDeveloper(Developer developer) {
+        taskDevelopers.add(developer);
     }
 
     public List<Developer> getTaskDevelopers() {
         return taskDevelopers;
+    }
+
+    public StringProperty getTaskDevelopersString() {
+        if(taskDevelopers.isEmpty()) {
+            return new SimpleStringProperty("Нет");
+        }
+
+        StringBuilder developers = new StringBuilder();
+        for(Developer dev : taskDevelopers) {
+            if(developers.length() != 0) {
+                developers.append(", ");
+            }
+            developers.append(dev.toString());
+        }
+        return new SimpleStringProperty(developers.toString());
     }
 }
