@@ -11,8 +11,8 @@ public class Task {
 
     private int id;
     private int number;
-    private String name;
-    private String description;
+    private String name = "";
+    private String description = "";
     private ObjectProperty<LocalDate> deadline;
     private int priority;
     private boolean isCompleted;
@@ -59,11 +59,11 @@ public class Task {
     }
 
     public LocalDate getDeadline() {
-        return deadline.get();
+        return deadline != null ? deadline.get() : null;
     }
 
     public Date getDeadlineSql() {
-        return Date.valueOf(deadline.get());
+        return deadline != null ? Date.valueOf(deadline.get()) : null;
     }
 
     public ObjectProperty<LocalDate> getDeadlineProperty() {
