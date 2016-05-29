@@ -14,7 +14,7 @@ public class Security {
             e.printStackTrace();
         }
         try {
-            if (md != null) {
+            if (md != null && password != null) {
                 md.update(password.getBytes("UTF-8"));
             }
         } catch (UnsupportedEncodingException e) {
