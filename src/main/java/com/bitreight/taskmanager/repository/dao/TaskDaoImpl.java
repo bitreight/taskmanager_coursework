@@ -1,9 +1,11 @@
 package com.bitreight.taskmanager.repository.dao;
 
+import com.bitreight.taskmanager.exceptions.TaskDaoException;
 import com.bitreight.taskmanager.model.Developer;
 import com.bitreight.taskmanager.model.Task;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.UncategorizedSQLException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.RowMapper;
@@ -60,7 +62,7 @@ public class TaskDaoImpl implements TaskDao {
     }
 
     @Override
-    public int createTask(Task task) {
+    public int createTask(Task task) throws TaskDaoException {
         Map out = null;
 
         SqlParameterSource in = new MapSqlParameterSource()
@@ -73,15 +75,17 @@ public class TaskDaoImpl implements TaskDao {
 
         try {
             out = procCreateTask.execute(in);
-        }
-        catch (Exception e) {
+        } catch (UncategorizedSQLException e) {
+            throw new TaskDaoException(e.getSQLException().getMessage());
+        } catch (Exception e) {
             e.printStackTrace();
+            throw new TaskDaoException("Произошла ошибка при добавлении.");
         }
         return (out != null ? (int) out.get("identity") : 0);
     }
 
     @Override
-    public void updateTask(Task task) {
+    public void updateTask(Task task) throws TaskDaoException {
         SqlParameterSource in = new MapSqlParameterSource()
                 .addValue("task_id", task.getId())
                 .addValue("number", task.getNumber())
@@ -93,94 +97,122 @@ public class TaskDaoImpl implements TaskDao {
 
         try {
             procUpdateTask.execute(in);
-        }
-        catch (Exception e) {
+        } catch (UncategorizedSQLException e) {
+            throw new TaskDaoException(e.getSQLException().getMessage());
+        } catch (Exception e) {
             e.printStackTrace();
+            throw new TaskDaoException("Произошла ошибка при сохранении данных.");
         }
     }
 
     @Override
-    public List<Task> getAllTasks() {
+    public List<Task> getAllTasks() throws TaskDaoException {
         List<Task> tasks;
-        tasks = storedFunctionCall.query(getAllTasks, new TaskSetExtractor());
-        return tasks;
+
+        try {
+            tasks = storedFunctionCall.query(getAllTasks, new TaskSetExtractor());
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new TaskDaoException("Произошла ошибка при получении данных.");
+        }
+        return tasks != null ? tasks : new ArrayList<Task>();
     }
 
     @Override
-    public List<Task> getIncompletedTasks() {
+    public List<Task> getIncompletedTasks() throws TaskDaoException {
         List<Task> tasks;
-        tasks = storedFunctionCall.query(getIncompletedTasks, new TaskSetExtractor());
-        return tasks;
+
+        try {
+            tasks = storedFunctionCall.query(getIncompletedTasks, new TaskSetExtractor());
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new TaskDaoException("Произошла ошибка при получении данных.");
+        }
+        return tasks != null ? tasks : new ArrayList<Task>();
     }
 
     @Override
-    public List<Task> getTasksByDeveloper(int developerId) {
+    public List<Task> getTasksByDeveloper(int developerId) throws TaskDaoException {
         List<Task> tasks;
-        tasks = storedFunctionCall.
-                query(getTasksByDeveloper, new Object[] { developerId }, new TaskSetExtractor());
-        return tasks;
+
+        try {
+            tasks = storedFunctionCall.
+                    query(getTasksByDeveloper, new Object[] { developerId }, new TaskSetExtractor());
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new TaskDaoException("Произошла ошибка при получении данных.");
+        }
+        return tasks != null ? tasks : new ArrayList<Task>();
     }
 
     @Override
-    public List<Task> getIncompletedTasksByDeveloper(int developerId) {
+    public List<Task> getIncompletedTasksByDeveloper(int developerId) throws TaskDaoException {
         List<Task> tasks;
-        tasks = storedFunctionCall.
-                query(getIncompletedTasksByDeveloper, new Object[] { developerId }, new TaskSetExtractor());
-        return tasks;
+
+        try {
+            tasks = storedFunctionCall.
+                    query(getIncompletedTasksByDeveloper, new Object[] { developerId }, new TaskSetExtractor());
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new TaskDaoException("Произошла ошибка при получении данных.");
+        }
+        return tasks != null ? tasks : new ArrayList<Task>();
     }
 
     @Override
-    public void deleteTask(int taskId) {
+    public void deleteTask(int taskId) throws TaskDaoException {
         SqlParameterSource in = new MapSqlParameterSource()
                 .addValue("task_id", taskId);
 
         try {
             procDeleteTask.execute(in);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
+            throw new TaskDaoException("Произошла ошибка при удалении.");
         }
     }
 
     @Override
-    public void assignTask(int taskId, int developerId) {
+    public void assignTask(int taskId, int developerId) throws TaskDaoException {
         SqlParameterSource in = new MapSqlParameterSource()
                 .addValue("task_id", taskId)
                 .addValue("dev_id", developerId);
 
         try {
             procAssignTask.execute(in);
-        }
-        catch (Exception e) {
+        } catch (UncategorizedSQLException e) {
+            throw new TaskDaoException(e.getSQLException().getMessage());
+        } catch (Exception e) {
             e.printStackTrace();
+            throw new TaskDaoException("Произошла ошибка при назначении задачи разработчику.");
         }
     }
 
     @Override
-    public void deassignTask(int taskId, int developerId) {
+    public void deassignTask(int taskId, int developerId) throws TaskDaoException {
         SqlParameterSource in = new MapSqlParameterSource()
                 .addValue("task_id", taskId)
                 .addValue("dev_id", developerId);
 
         try {
             procDeassignTask.execute(in);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
+            throw new TaskDaoException("Произошла ошибка отмене назначения задачи разработчику.");
         }
     }
 
     @Override
-    public void setTaskCompletionByUser(int taskId, boolean isCompleted) {
+    public void setTaskCompletionByUser(int taskId, boolean isCompleted) throws TaskDaoException {
         SqlParameterSource in = new MapSqlParameterSource()
                 .addValue("task_id", taskId)
                 .addValue("is_completed", isCompleted);
 
         try {
             procSetTaskCompletionByUser.execute(in);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
+            throw new TaskDaoException("Произошла ошибка при отметке о выполнении.");
         }
     }
 
