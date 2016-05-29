@@ -34,10 +34,13 @@ public class DeveloperDaoImpl implements DeveloperDao {
     public void setDataSource(DataSource dataSource) {
         this.procCreateDeveloper = new SimpleJdbcCall(dataSource)
                 .withProcedureName("createDeveloper");
+
         this.procUpdateDeveloper = new SimpleJdbcCall(dataSource)
                 .withProcedureName("updateDeveloper");
+
         this.procUpdateCredentials = new SimpleJdbcCall(dataSource)
                 .withProcedureName("updateCredentials");
+
         this.procDeleteDeveloper = new SimpleJdbcCall(dataSource)
                 .withProcedureName("deleteDeveloper");
 
@@ -62,25 +65,27 @@ public class DeveloperDaoImpl implements DeveloperDao {
         } catch (UncategorizedSQLException e) {
             throw new DeveloperDaoException(e.getSQLException().getMessage());
         } catch (Exception e) {
-            e.getMessage();
+            e.printStackTrace();
+            throw new DeveloperDaoException("Произошла ошибка при добавлении.");
         }
         return (out != null ? (int) out.get("identity") : 0);
     }
 
     @Override
-    public List<Developer> getDevelopers() {
-        List<Developer> developers = new ArrayList<Developer>();
+    public List<Developer> getDevelopers() throws DeveloperDaoException {
+        List<Developer> developers;
 
         try {
             developers = storedFunctionCall.query(getDevelopers, new DeveloperMapper());
         } catch (Exception e) {
-            e.getMessage();
+            e.printStackTrace();
+            throw new DeveloperDaoException("Произошла ошибка при получении данных.");
         }
-        return developers;
+        return developers != null ? developers : new ArrayList<Developer>();
     }
 
     @Override
-    public boolean updateDeveloper(Developer developer) {
+    public void updateDeveloper(Developer developer) throws DeveloperDaoException {
         SqlParameterSource in = new MapSqlParameterSource()
                 .addValue("dev_id", developer.getId())
                 .addValue("dev_name", developer.getName())
@@ -91,15 +96,14 @@ public class DeveloperDaoImpl implements DeveloperDao {
 
         try {
             procUpdateDeveloper.execute(in);
-            return true;
         } catch (Exception e) {
-            e.getMessage();
-            return false;
+            e.printStackTrace();
+            throw new DeveloperDaoException("Произошла ошибка при сохранении данных.");
         }
     }
 
     @Override
-    public boolean updateCredentials(int developerId, String username, String password) throws DeveloperDaoException {
+    public void updateCredentials(int developerId, String username, String password) throws DeveloperDaoException {
         SqlParameterSource in = new MapSqlParameterSource()
                 .addValue("dev_id", developerId)
                 .addValue("username", username)
@@ -107,27 +111,25 @@ public class DeveloperDaoImpl implements DeveloperDao {
 
         try {
             procUpdateCredentials.execute(in);
-            return true;
         } catch(UncategorizedSQLException e) {
             throw new DeveloperDaoException(e.getSQLException().getMessage());
         } catch (Exception e) {
-            e.getMessage();
-            return false;
+            e.printStackTrace();
+            throw new DeveloperDaoException("Произошла ошибка при изменении учетных данных.");
         }
     }
 
     @Override
-    public boolean deleteDeveloper(int developerId) {
+    public void deleteDeveloper(int developerId) throws DeveloperDaoException {
         SqlParameterSource in = new MapSqlParameterSource()
                 .addValue("dev_id", developerId);
 
         try {
             procDeleteDeveloper.execute(in);
-            return true;
         }
         catch (Exception e) {
-            e.getMessage();
-            return false;
+            e.printStackTrace();
+            throw new DeveloperDaoException("Произошла ошибка при удалении.");
         }
     }
 
