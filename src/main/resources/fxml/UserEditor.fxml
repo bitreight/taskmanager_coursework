@@ -9,7 +9,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="600.0" stylesheets="@UserEditorScreenStyle.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="610.0" prefWidth="700.0" stylesheets="@../css/UserEditorStyle.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.bitreight.taskmanager.controllers.UserEditorController">
    <children>
       <VBox prefHeight="400.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -17,11 +17,11 @@
                <children>
                   <HBox layoutX="55.0" layoutY="-4.0" prefHeight="55.0" prefWidth="600.0" styleClass="menuPane" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <children>
-                        <Button layoutX="55.0" layoutY="-4.0" mnemonicParsing="false" prefHeight="55.0" prefWidth="59.0" styleClass="addButton">
+                        <Button layoutX="55.0" layoutY="-4.0" mnemonicParsing="false" onAction="#developerAddButtonAction" prefHeight="55.0" prefWidth="59.0" styleClass="addButton">
                            <graphic>
                               <ImageView fitHeight="48.0" fitWidth="48.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
-                                    <Image url="@plus.png" />
+                                    <Image url="@../images/plus.png" />
                                  </image>
                               </ImageView>
                            </graphic>
@@ -34,31 +34,47 @@
                <items>
                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="398.0" prefWidth="247.0" SplitPane.resizableWithParent="false">
                      <children>
-                        <ListView focusTraversable="false" layoutX="23.0" layoutY="47.0" prefHeight="398.0" prefWidth="208.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                        <ListView fx:id="developerList" focusTraversable="false" layoutX="23.0" layoutY="47.0" prefHeight="398.0" prefWidth="208.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                      </children>
                   </AnchorPane>
-                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0" styleClass="rightPane">
+                  <AnchorPane minWidth="300.0" styleClass="rightPane">
                      <children>
-                        <AnchorPane prefHeight="398.0" prefWidth="415.0" styleClass="infoPane" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        <AnchorPane minWidth="300.0" prefHeight="398.0" prefWidth="415.0" styleClass="infoPane" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                            <children>
                               <VBox prefHeight="368.0" prefWidth="379.0" spacing="20.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                  <children>
                                     <VBox spacing="10.0">
                                        <children>
+                                          <Label text="Личные данные:" />
+                                          <TextField fx:id="developerNameField" promptText="Имя" />
+                                          <TextField fx:id="developerSurnameField" promptText="Фамилия" />
+                                          <TextField fx:id="developerPatronymicField" promptText="Отчество" />
+                                          <TextField fx:id="developerPositionField" promptText="Должность" />
+                                          <HBox>
+                                             <children>
+                                                <CheckBox fx:id="isAdminCheckbox" mnemonicParsing="false" />
+                                                <Label text="Администратор" />
+                                             </children>
+                                          </HBox>
+                                          <HBox spacing="15.0">
+                                             <children>
+                                                <Button maxWidth="133.0" minWidth="133.0" mnemonicParsing="false" onAction="#infoSaveButtonAction" prefWidth="133.0" text="Сохранить" />
+                                                <Button maxWidth="245.0" mnemonicParsing="false" onAction="#credentialsChangeButtonAction" prefHeight="37.0" prefWidth="245.0" text="Изменить учетные данные" />
+                                             </children>
+                                          </HBox>
+                                       </children>
+                                    </VBox>
+                                    <VBox disable="true" spacing="10.0">
+                                       <children>
                                           <Label text="Учетные данные:" />
                                           <TextField editable="false" focusTraversable="false" layoutX="55.0" layoutY="199.0" promptText="Логин" />
                                           <PasswordField editable="false" focusTraversable="false" layoutX="55.0" layoutY="263.0" promptText="Пароль" />
-                                       </children>
-                                    </VBox>
-                                    <VBox spacing="15.0">
-                                       <children>
                                           <HBox spacing="15.0">
                                              <children>
-                                                <Button focusTraversable="false" maxWidth="148.0" minWidth="0.0" mnemonicParsing="false" prefWidth="148.0" text="Изменить" HBox.hgrow="NEVER" />
-                                                <Button focusTraversable="false" maxWidth="148.0" minWidth="0.0" mnemonicParsing="false" prefWidth="148.0" text="Удалить" />
+                                                <Button focusTraversable="false" maxWidth="180.0" minWidth="150.0" mnemonicParsing="false" onAction="#credentialsSaveButtonAction" prefWidth="180.0" text="Сохранить" HBox.hgrow="NEVER" />
+                                                <Button focusTraversable="false" maxWidth="180.0" minWidth="150.0" mnemonicParsing="false" onAction="#cancelCredentialsChangingButtonAction" prefWidth="180.0" text="Отменить" />
                                              </children>
                                           </HBox>
-                                          <Button disable="true" focusTraversable="false" maxWidth="148.0" minWidth="0.0" mnemonicParsing="false" prefWidth="147.0" text="Сохранить" VBox.vgrow="ALWAYS" />
                                        </children>
                                     </VBox>
                                  </children>
