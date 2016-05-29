@@ -1,5 +1,6 @@
 package com.bitreight.taskmanager.repository.auth;
 
+import com.bitreight.taskmanager.exceptions.AuthorizationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
@@ -23,7 +24,7 @@ public class Authorization {
                 .withProcedureName("checkCredentials");
     }
 
-    public AuthResult login(String username, String password)  {
+    public AuthResult login(String username, String password) throws AuthorizationException {
         Map out = null;
 
         SqlParameterSource in = new MapSqlParameterSource()
@@ -35,6 +36,7 @@ public class Authorization {
         }
         catch (Exception e) {
             e.printStackTrace();
+            throw new AuthorizationException("Ошибка авторизации.");
         }
 
         boolean isValid =  (out != null ? (Boolean) out.get("is_valid") : false);
