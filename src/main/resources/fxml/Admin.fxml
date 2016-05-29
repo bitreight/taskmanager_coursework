@@ -23,8 +23,8 @@
                      <children>
                         <MenuButton minHeight="56.0" minWidth="70.0" mnemonicParsing="false" prefHeight="200.0" prefWidth="70.0" textFill="TRANSPARENT">
                           <items>
-                              <MenuItem mnemonicParsing="false" text="Редактор пользователей" />
-                            <MenuItem mnemonicParsing="false" text="Выход" />
+                              <MenuItem mnemonicParsing="false" onAction="#openUserEditorButtonHandler" text="Редактор пользователей" />
+                            <MenuItem mnemonicParsing="false" onAction="#exitButtonHandler" text="Выход" />
                           </items>
                            <graphic>
                               <ImageView pickOnBounds="true" preserveRatio="true">
@@ -37,7 +37,7 @@
                               <Insets top="2.0" />
                            </HBox.margin>
                         </MenuButton>
-                        <Button id="taskAddButton" minHeight="56.0" mnemonicParsing="false" prefHeight="56.0" prefWidth="59.0">
+                        <Button id="taskAddButton" minHeight="56.0" mnemonicParsing="false" onAction="#taskAddButtonHandler" prefHeight="56.0" prefWidth="59.0">
                            <graphic>
                               <ImageView fitHeight="48.0" fitWidth="48.0" pickOnBounds="true" preserveRatio="true" styleClass="addButton">
                                  <image>
@@ -48,7 +48,7 @@
                            <HBox.margin>
                               <Insets bottom="-2.0" />
                            </HBox.margin></Button>
-                        <Button id="refreshButton" minHeight="56.0" mnemonicParsing="false" prefHeight="56.0" prefWidth="59.0">
+                        <Button id="refreshButton" minHeight="56.0" mnemonicParsing="false" onAction="#refreshButtonHandler" prefHeight="56.0" prefWidth="59.0">
                            <graphic>
                               <ImageView fitHeight="48.0" fitWidth="48.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
@@ -58,11 +58,19 @@
                            </graphic>
                         </Button>
                         <Region prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
-                        <ChoiceBox maxHeight="36.0" minHeight="30.0" prefHeight="36.0" prefWidth="150.0">
-                           <HBox.margin>
-                              <Insets />
-                           </HBox.margin>
-                        </ChoiceBox>
+                        <HBox alignment="CENTER" spacing="10.0">
+                           <children>
+                              <ToggleButton maxHeight="36.0" minHeight="36.0" mnemonicParsing="false" prefHeight="36.0" text="Скрыть выполненные" />
+                              <ChoiceBox maxHeight="36.0" minHeight="30.0" prefHeight="36.0" prefWidth="150.0">
+                                 <HBox.margin>
+                                    <Insets />
+                                 </HBox.margin>
+                              </ChoiceBox>
+                           </children>
+                           <padding>
+                              <Insets right="5.0" />
+                           </padding>
+                        </HBox>
                      </children>
                      <padding>
                         <Insets right="5.0" />
@@ -98,7 +106,7 @@
                            <children>
                               <HBox alignment="CENTER_LEFT" layoutX="17.0" layoutY="14.0" spacing="4.0" VBox.vgrow="NEVER">
                                  <children>
-                                    <CheckBox mnemonicParsing="false" />
+                                    <CheckBox fx:id="isCompletedCheckbox" mnemonicParsing="false" />
                                     <TextField fx:id="taskNameField" minWidth="300.0" prefHeight="38.0" prefWidth="761.0" promptText="Название задачи" HBox.hgrow="ALWAYS" />
                                  </children>
                               </HBox>
@@ -123,7 +131,7 @@
                                                       <Image url="@../images/term.png" />
                                                    </image>
                                                 </ImageView>
-                                                <DatePicker fx:id="taskTermPicker" minWidth="145.0" prefHeight="38.0" prefWidth="145.0" promptText="Срок" />
+                                                <DatePicker fx:id="taskDeadlinePicker" minWidth="145.0" prefHeight="38.0" prefWidth="145.0" promptText="Срок" />
                                              </children>
                                           </HBox>
                                           <HBox alignment="CENTER" spacing="12.0" VBox.vgrow="NEVER">
@@ -133,10 +141,10 @@
                                                       <Image url="@../images/priority.png" />
                                                    </image>
                                                 </ImageView>
-                                                <ChoiceBox prefWidth="145.0" />
+                                                <ChoiceBox fx:id="priorityChoicebox" prefWidth="145.0" />
                                              </children>
                                           </HBox>
-                                          <Button fx:id="taskSaveButton" cancelButton="true" layoutX="18.0" layoutY="191.0" mnemonicParsing="false" prefHeight="38.0" prefWidth="181.0" text="Сохранить" />
+                                          <Button fx:id="taskSaveButton" cancelButton="true" layoutX="18.0" layoutY="191.0" mnemonicParsing="false" onAction="#taskSaveButtonHandler" prefHeight="38.0" prefWidth="181.0" text="Сохранить" />
                                        </children>
                                     </VBox>
                                     <TextArea fx:id="taskDescriptionArea" layoutX="205.0" layoutY="72.0" minWidth="250.0" promptText="Описание" HBox.hgrow="ALWAYS" />
@@ -149,12 +157,12 @@
                         </VBox>
                         <VBox maxWidth="190.0" minWidth="190.0" prefHeight="265.0" prefWidth="190.0" spacing="20.0" HBox.hgrow="NEVER">
                            <children>
-                              <ChoiceBox maxWidth="190.0" minWidth="190.0" prefHeight="37.0" prefWidth="190.0" />
-                              <ListView maxWidth="190.0" minWidth="190.0" prefHeight="151.0" prefWidth="190.0" />
+                              <ChoiceBox fx:id="developerChoicebox" maxWidth="190.0" minWidth="190.0" prefHeight="37.0" prefWidth="190.0" />
+                              <ListView fx:id="taskDevelopersList" maxWidth="190.0" minWidth="190.0" prefHeight="151.0" prefWidth="190.0" />
                               <HBox spacing="15.0">
                                  <children>
-                                    <Button mnemonicParsing="false" text="Добавить" />
-                                    <Button mnemonicParsing="false" prefHeight="37.0" prefWidth="81.0" text="Удалить" />
+                                    <Button mnemonicParsing="false" onAction="#taskAssignButtonHandler" text="Добавить" />
+                                    <Button mnemonicParsing="false" onAction="#taskDeassignButtonHandler" prefHeight="37.0" prefWidth="81.0" text="Удалить" />
                                  </children>
                               </HBox>
                            </children>
