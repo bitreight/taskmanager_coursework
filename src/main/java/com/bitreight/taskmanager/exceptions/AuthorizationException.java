@@ -1,6 +1,6 @@
 package com.bitreight.taskmanager.exceptions;
 
-public class AuthorizationException extends Exception {
+public class AuthorizationException extends RuntimeException {
 
     public AuthorizationException(String message) {
         super(message);
