@@ -17,7 +17,7 @@
                <children>
                   <HBox layoutX="55.0" layoutY="-4.0" prefHeight="55.0" prefWidth="600.0" styleClass="menuPane" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <children>
-                        <Button layoutX="55.0" layoutY="-4.0" mnemonicParsing="false" onAction="#developerAddButtonAction" prefHeight="55.0" prefWidth="59.0" styleClass="addButton">
+                        <Button layoutX="55.0" layoutY="-4.0" mnemonicParsing="false" onAction="#developerAddButtonHandler" prefHeight="55.0" prefWidth="59.0" styleClass="addButton">
                            <graphic>
                               <ImageView fitHeight="48.0" fitWidth="48.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
@@ -34,7 +34,14 @@
                <items>
                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="398.0" prefWidth="247.0" SplitPane.resizableWithParent="false">
                      <children>
-                        <ListView fx:id="developerList" focusTraversable="false" layoutX="23.0" layoutY="47.0" prefHeight="398.0" prefWidth="208.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                        <ListView fx:id="developerListView" focusTraversable="false" layoutX="23.0" layoutY="47.0" onMouseClicked="#selectDeveloperAction" prefHeight="398.0" prefWidth="208.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                           <contextMenu>
+                              <ContextMenu>
+                                <items>
+                                  <MenuItem mnemonicParsing="false" onAction="#deleteDeveloperHandler" text="Удалить" />
+                                </items>
+                              </ContextMenu>
+                           </contextMenu></ListView>
                      </children>
                   </AnchorPane>
                   <AnchorPane minWidth="300.0" styleClass="rightPane">
@@ -43,7 +50,7 @@
                            <children>
                               <VBox prefHeight="368.0" prefWidth="379.0" spacing="20.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                  <children>
-                                    <VBox spacing="10.0">
+                                    <VBox fx:id="infoVBox" spacing="10.0">
                                        <children>
                                           <Label text="Личные данные:" />
                                           <TextField fx:id="developerNameField" promptText="Имя" />
@@ -58,21 +65,21 @@
                                           </HBox>
                                           <HBox spacing="15.0">
                                              <children>
-                                                <Button maxWidth="133.0" minWidth="133.0" mnemonicParsing="false" onAction="#infoSaveButtonAction" prefWidth="133.0" text="Сохранить" />
-                                                <Button maxWidth="245.0" mnemonicParsing="false" onAction="#credentialsChangeButtonAction" prefHeight="37.0" prefWidth="245.0" text="Изменить учетные данные" />
+                                                <Button fx:id="infoSaveButton" maxWidth="133.0" minWidth="133.0" mnemonicParsing="false" onAction="#infoSaveButtonHandler" prefWidth="133.0" text="Сохранить" />
+                                                <Button fx:id="credentialsChangeButton" maxWidth="245.0" mnemonicParsing="false" onAction="#credentialsChangeButtonHandler" prefHeight="37.0" prefWidth="245.0" text="Изменить учетные данные" />
                                              </children>
                                           </HBox>
                                        </children>
                                     </VBox>
-                                    <VBox disable="true" spacing="10.0">
+                                    <VBox fx:id="credentialsVBox" disable="true" spacing="10.0">
                                        <children>
                                           <Label text="Учетные данные:" />
-                                          <TextField editable="false" focusTraversable="false" layoutX="55.0" layoutY="199.0" promptText="Логин" />
-                                          <PasswordField editable="false" focusTraversable="false" layoutX="55.0" layoutY="263.0" promptText="Пароль" />
+                                          <TextField fx:id="usernameField" focusTraversable="false" layoutX="55.0" layoutY="199.0" promptText="Логин" />
+                                          <PasswordField fx:id="passwordField" focusTraversable="false" layoutX="55.0" layoutY="263.0" promptText="Пароль" />
                                           <HBox spacing="15.0">
                                              <children>
-                                                <Button focusTraversable="false" maxWidth="180.0" minWidth="150.0" mnemonicParsing="false" onAction="#credentialsSaveButtonAction" prefWidth="180.0" text="Сохранить" HBox.hgrow="NEVER" />
-                                                <Button focusTraversable="false" maxWidth="180.0" minWidth="150.0" mnemonicParsing="false" onAction="#cancelCredentialsChangingButtonAction" prefWidth="180.0" text="Отменить" />
+                                                <Button fx:id="credentialsSaveButton" focusTraversable="false" maxWidth="180.0" minWidth="150.0" mnemonicParsing="false" onAction="#credentialsSaveButtonHandler" prefWidth="180.0" text="Сохранить" HBox.hgrow="NEVER" />
+                                                <Button fx:id="cancelCredentialsChanging" focusTraversable="false" maxWidth="180.0" minWidth="150.0" mnemonicParsing="false" onAction="#cancelCredentialsChangingButtonHandler" prefWidth="180.0" text="Отменить" />
                                              </children>
                                           </HBox>
                                        </children>
