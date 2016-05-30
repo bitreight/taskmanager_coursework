@@ -79,7 +79,7 @@ public class TaskDaoImpl implements TaskDao {
             throw new TaskDaoException(e.getSQLException().getMessage());
         } catch (Exception e) {
             e.printStackTrace();
-            throw new TaskDaoException("Произошла ошибка при добавлении.");
+            throw new TaskDaoException("Произошла ошибка при добавлении задачи.");
         }
         return (out != null ? (int) out.get("identity") : 0);
     }
@@ -101,7 +101,7 @@ public class TaskDaoImpl implements TaskDao {
             throw new TaskDaoException(e.getSQLException().getMessage());
         } catch (Exception e) {
             e.printStackTrace();
-            throw new TaskDaoException("Произошла ошибка при сохранении данных.");
+            throw new TaskDaoException("Произошла ошибка при сохранении данных о задаче.");
         }
     }
 
@@ -113,7 +113,7 @@ public class TaskDaoImpl implements TaskDao {
             tasks = storedFunctionCall.query(getAllTasks, new TaskSetExtractor());
         } catch (Exception e) {
             e.printStackTrace();
-            throw new TaskDaoException("Произошла ошибка при получении данных.");
+            throw new TaskDaoException("Произошла ошибка при получении данных о задачах.");
         }
         return tasks != null ? tasks : new ArrayList<Task>();
     }
@@ -126,7 +126,7 @@ public class TaskDaoImpl implements TaskDao {
             tasks = storedFunctionCall.query(getIncompletedTasks, new TaskSetExtractor());
         } catch (Exception e) {
             e.printStackTrace();
-            throw new TaskDaoException("Произошла ошибка при получении данных.");
+            throw new TaskDaoException("Произошла ошибка при получении данных о задачах.");
         }
         return tasks != null ? tasks : new ArrayList<Task>();
     }
@@ -140,7 +140,7 @@ public class TaskDaoImpl implements TaskDao {
                     query(getTasksByDeveloper, new Object[] { developerId }, new TaskSetExtractor());
         } catch (Exception e) {
             e.printStackTrace();
-            throw new TaskDaoException("Произошла ошибка при получении данных.");
+            throw new TaskDaoException("Произошла ошибка при получении данных о задачах.");
         }
         return tasks != null ? tasks : new ArrayList<Task>();
     }
@@ -154,7 +154,7 @@ public class TaskDaoImpl implements TaskDao {
                     query(getIncompletedTasksByDeveloper, new Object[] { developerId }, new TaskSetExtractor());
         } catch (Exception e) {
             e.printStackTrace();
-            throw new TaskDaoException("Произошла ошибка при получении данных.");
+            throw new TaskDaoException("Произошла ошибка при получении данных о задачах.");
         }
         return tasks != null ? tasks : new ArrayList<Task>();
     }
@@ -168,7 +168,7 @@ public class TaskDaoImpl implements TaskDao {
             procDeleteTask.execute(in);
         } catch (Exception e) {
             e.printStackTrace();
-            throw new TaskDaoException("Произошла ошибка при удалении.");
+            throw new TaskDaoException("Произошла ошибка при удалении задачи.");
         }
     }
 

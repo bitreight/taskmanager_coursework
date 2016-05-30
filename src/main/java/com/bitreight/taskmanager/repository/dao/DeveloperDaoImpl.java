@@ -66,7 +66,7 @@ public class DeveloperDaoImpl implements DeveloperDao {
             throw new DeveloperDaoException(e.getSQLException().getMessage());
         } catch (Exception e) {
             e.printStackTrace();
-            throw new DeveloperDaoException("Произошла ошибка при добавлении.");
+            throw new DeveloperDaoException("Произошла ошибка при добавлении разработчика.");
         }
         return (out != null ? (int) out.get("identity") : 0);
     }
@@ -79,7 +79,7 @@ public class DeveloperDaoImpl implements DeveloperDao {
             developers = storedFunctionCall.query(getDevelopers, new DeveloperMapper());
         } catch (Exception e) {
             e.printStackTrace();
-            throw new DeveloperDaoException("Произошла ошибка при получении данных.");
+            throw new DeveloperDaoException("Произошла ошибка при получении данных о разработчиках.");
         }
         return developers != null ? developers : new ArrayList<Developer>();
     }
@@ -96,9 +96,11 @@ public class DeveloperDaoImpl implements DeveloperDao {
 
         try {
             procUpdateDeveloper.execute(in);
+        } catch (UncategorizedSQLException e) {
+            throw new DeveloperDaoException(e.getSQLException().getMessage());
         } catch (Exception e) {
             e.printStackTrace();
-            throw new DeveloperDaoException("Произошла ошибка при сохранении данных.");
+            throw new DeveloperDaoException("Произошла ошибка при сохранении данных о разработчике.");
         }
     }
 
@@ -126,10 +128,11 @@ public class DeveloperDaoImpl implements DeveloperDao {
 
         try {
             procDeleteDeveloper.execute(in);
-        }
-        catch (Exception e) {
+        } catch (UncategorizedSQLException e) {
+            throw new DeveloperDaoException(e.getSQLException().getMessage());
+        } catch (Exception e) {
             e.printStackTrace();
-            throw new DeveloperDaoException("Произошла ошибка при удалении.");
+            throw new DeveloperDaoException("Произошла ошибка при удалении разработчика.");
         }
     }
 
