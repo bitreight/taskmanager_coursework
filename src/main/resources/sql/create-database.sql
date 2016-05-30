@@ -183,9 +183,10 @@ Returns Table
 As 
 Return
 (
-    Select Tasks.*, Developers.id as dev_id, Developers.dev_name, Developers.surname, Developers.patronymic
+    Select Top 100 percent Tasks.*, Developers.id as dev_id, Developers.dev_name, Developers.surname, Developers.patronymic
     From Tasks Left Join Developers_Tasks On Tasks.id = Developers_Tasks.task_id
-               Left Join Developers On Developers.id = Developers_Tasks.dev_id   
+               Left Join Developers On Developers.id = Developers_Tasks.dev_id
+    Order By Tasks.number   
 )
 Go
 
@@ -204,10 +205,11 @@ Returns Table
 As 
 Return
 (
-    Select Tasks.*, Developers.id as dev_id, Developers.dev_name, Developers.surname, Developers.patronymic
+    Select Top 100 percent Tasks.*, Developers.id as dev_id, Developers.dev_name, Developers.surname, Developers.patronymic
     From Tasks Join Developers_Tasks On Tasks.id = Developers_Tasks.task_id
                Join Developers On Developers.id = Developers_Tasks.dev_id
     Where Developers.id = @dev_id    
+    Order By Tasks.number
 )
 Go
 
@@ -296,7 +298,7 @@ Begin
         Where Developers.username = (Select i.username From inserted i)) = 2
         Begin
             Rollback Transaction
-            RAISERROR(60010, 16, 1); --Указанное имя входа существует в базе данных.
+            RAISERROR('Указанное имя входа существует в базе данных.', 16, 1);
         End                
 End
 Go
@@ -308,7 +310,7 @@ Create Trigger checkDeleteDeveloperTrigger
     On Developers
     Instead OF Delete
 As
-Begin
+Begin   
     Set Nocount On;
     Delete Developers_Tasks
     From Deleted
@@ -317,6 +319,22 @@ Begin
     Delete Developers
     From Deleted
     Where Deleted.id = Developers.id
+End
+Go
+
+Create Trigger checkIsLastAdminTrigger
+    On Developers
+    For Update, Delete
+As
+Begin 
+    If(Select d.is_admin From deleted d) = 1
+        Begin   
+            If Not Exists(Select * From Developers Where is_admin = 1)
+                Begin
+                    Rollback Transaction
+                    RAISERROR('В базе данных должен быть хотя бы один администратор.', 16, 1)
+            End
+        End
 End
 Go
 
@@ -353,18 +371,18 @@ Begin
         Where Tasks.number = (Select i.number From inserted i)) = 2
         Begin
             Rollback Transaction
-            RAISERROR(60020, 16, 1); --Задача с таким номером существует в базе данных.
+            RAISERROR('Задача с таким номером существует в базе данных.', 16, 1); 
         End
     Else If((Select i.[priority] From inserted i) = 1) and
         ((Select Count(*) From Tasks Where [priority] = 1) = 3)
         Begin
             Rollback Transaction
-            RAISERROR(60021, 16, 1); --В списке уже имеется две задачи с наивысшим приоритетом.            
+            RAISERROR('В списке уже имеется две задачи с наивысшим приоритетом.', 16, 1); 
         End
     Else If((Select i.deadline From inserted i) < Convert(date, GETDATE()))
         Begin
             Rollback Transaction
-            RAISERROR(60022, 16, 1); --Срок выполнения задачи не может быть раньше текущей даты.
+            RAISERROR('Срок выполнения задачи не может быть раньше текущей даты.', 16, 1); 
         End
 End
 Go
@@ -383,19 +401,19 @@ Begin
               Developers_Tasks.dev_id = (Select i.dev_id From inserted i)) = 2
         Begin
             Rollback Transaction
-            RAISERROR(60023, 16, 1); --Данная задача уже назначена этому разработчику.
+            RAISERROR('Данная задача уже назначена этому разработчику.', 16, 1); 
         End
     Else If (Select Count(*) From Developers_Tasks 
              Where Developers_Tasks.task_id = (Select i.task_id From inserted i)) = 3
         Begin
             Rollback Transaction
-            RAISERROR(60024, 16, 1); --Данная задача уже назначена двум разработчикам.
+            RAISERROR('Данная задача уже назначена двум разработчикам.', 16, 1); 
         End
     Else if (Select Count(*) From Developers_Tasks 
              Where Developers_Tasks.dev_id = (Select i.dev_id From inserted i)) = 4
         Begin
             Rollback Transaction
-            RAISERROR(60025, 16, 1); --Выбранному разработчику уже назначено 3 задачи.
+            RAISERROR('Выбранному разработчику уже назначено 3 задачи.', 16, 1); 
         End
 End
 Go
@@ -413,24 +431,27 @@ Grant Execute To TaskmanagerUser;
 Go
 
 --Add default admin of the project 
-Insert Into Developers Values('admin', HASHBYTES('SHA2_256', 'password'), 'Курчевский', 'Алексей', 'Александрович', 'Project manager', 1);
+Insert Into Developers Values('admin', HASHBYTES('SHA2_256', 'password'), 'Алексей', 'Курчевский', 'Александрович', 'Project manager', 1);
 
 --Add error messages
-EXEC sys.sp_addmessage 60010, 16, 'Указанное имя входа существует в базе данных.', @replace = 'REPLACE';
-EXEC sys.sp_addmessage 60020, 16, 'Задача с таким номером существует в базе данных.', @replace = 'REPLACE';
-EXEC sys.sp_addmessage 60021, 16, 'В списке уже имеется две задачи с наивысшим приоритетом.', @replace = 'REPLACE';
-EXEC sys.sp_addmessage 60022, 16, 'Срок выполнения задачи не может быть раньше текущей даты.', @replace = 'REPLACE';
-EXEC sys.sp_addmessage 60023, 16, 'Данная задача уже назначена этому разработчику.', @replace = 'REPLACE';
-EXEC sys.sp_addmessage 60024, 16, 'Данная задача уже назначена двум разработчикам.', @replace = 'REPLACE';
-EXEC sys.sp_addmessage 60025, 16, 'Выбранному разработчику уже назначено 3 задачи.', @replace = 'REPLACE';
+--EXEC sys.sp_addmessage 60010, 16, 'Указанное имя входа существует в базе данных.', @replace = 'REPLACE';
+--EXEC sys.sp_addmessage 60020, 16, 'Задача с таким номером существует в базе данных.', @replace = 'REPLACE';
+--EXEC sys.sp_addmessage 60021, 16, 'В списке уже имеется две задачи с наивысшим приоритетом.', @replace = 'REPLACE';
+--EXEC sys.sp_addmessage 60022, 16, 'Срок выполнения задачи не может быть раньше текущей даты.', @replace = 'REPLACE';
+--EXEC sys.sp_addmessage 60023, 16, 'Данная задача уже назначена этому разработчику.', @replace = 'REPLACE';
+--EXEC sys.sp_addmessage 60024, 16, 'Данная задача уже назначена двум разработчикам.', @replace = 'REPLACE';
+--EXEC sys.sp_addmessage 60025, 16, 'Выбранному разработчику уже назначено 3 задачи.', @replace = 'REPLACE';
+--EXEC sys.sp_addmessage 60030, 16, 'В базе данных должен быть хотя бы один администратор.', @replace = 'REPLACE';
 
 --Declare @test int;
 --Execute createDeveloper 'test4',123,'name','surname','patronymic','test',0, @test output;
 
 --Delete From Developers;
 --Execute deleteDeveloper 4;
+--Execute assignTask 33, 17
 
 --Declare @test int;
 --Execute createTask 100,'task2','testtask','05-28-2016', 3, 0, @test output;
+--Execute updateTask 100,'task2','testtask','05-28-2016', 3, 0
 --Delete From Tasks;
 --Select @test;
