@@ -1,17 +1,16 @@
 package com.bitreight.taskmanager.controllers;
 
+import com.bitreight.taskmanager.Validation;
+import com.bitreight.taskmanager.exceptions.AuthorizationException;
 import com.bitreight.taskmanager.repository.auth.AuthResult;
 import com.bitreight.taskmanager.repository.auth.Authorization;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
 
-public class LoginController {
+public class LoginController extends AbstractController {
 
     @Autowired
     private Authorization auth;
@@ -32,24 +31,30 @@ public class LoginController {
     private void loginButtonAction() throws IOException {
         String username = usernameField.getText();
         String password = passwordField.getText();
-        if(!checkUsername(username)) {
+        if(!Validation.checkUsername(username)) {
             invalidLabel.setText("Логин пользователя должен содержать 3..10 символов");
         }
-        else if (!checkPassword(password)) {
+        else if (!Validation.checkPassword(password)) {
             invalidLabel.setText("Пароль пользователя должен содержать 3..10 символов");
         }
         else {
-            AuthResult authResult = auth.login(username, password);
-            if(authResult.isValid) {
-                if(authResult.isAdmin) {
-                    ScreensController.loadAdmin();
+            try {
+                AuthResult authResult = auth.login(username, password);
+                if(authResult.isValid) {
+                    if(authResult.isAdmin) {
+                        ScreensController.loadAdmin();
+                    }
+                    else {
+                        ScreensController.loadUser();
+                    }
                 }
                 else {
-                    ScreensController.loadUser();
+                    invalidLabel.setText("Логин пользователя или пароль введены неверно");
                 }
-            }
-            else {
-                invalidLabel.setText("Логин пользователя или пароль введены неверно");
+            } catch (AuthorizationException e) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Ошибка");
+                alert.setHeaderText(e.getMessage());
             }
         }
     }
@@ -59,13 +64,4 @@ public class LoginController {
         invalidLabel.setText("");
     }
 
-    //testable
-    private boolean checkUsername(String username) {
-        return !(username.length() < 3 | username.length() > 10);
-    }
-
-    //testable
-    private boolean checkPassword(String password) {
-        return !(password.length() < 3 | password.length() > 10);
-    }
 }
