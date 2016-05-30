@@ -10,7 +10,7 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception {
         primaryStage.setTitle("Taskmanager");
         ScreensController.initStage(primaryStage);
-        ScreensController.loadLogin();
+        ScreensController.loadAdmin();
         primaryStage.show();
     }
 
