@@ -2,6 +2,7 @@ package com.bitreight.taskmanager.controllers;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -13,19 +14,20 @@ public class ScreensController {
     private static final String pathToAdminScreen = "/fxml/Admin.fxml";
     private static final String pathToUserScreen = "/fxml/User.fxml";
     private static final String pathToLoginScreen = "/fxml/Login.fxml";
+    private static final String pathToUserEditorScreen = "/fxml/UserEditor.fxml";
 
     private static Stage primaryStage;
     private static FXMLLoader screenLoader;
-    private static ApplicationContext mainContext;
+    //private static ApplicationContext mainContext;
 
     private static final int screenSizeX = 1000;
     private static final int screenSizeY = 600;
 
 
-    static {
-        //screenLoader = new FXMLLoader();
-        mainContext = new ClassPathXmlApplicationContext("/spring/spring-context.xml");
-    }
+//    static {
+//        screenLoader = new FXMLLoader();
+//        mainContext = new ClassPathXmlApplicationContext("/spring/spring-context.xml");
+//    }
 
     public static void initStage(Stage stage) {
         if(primaryStage == null) {
@@ -57,8 +59,18 @@ public class ScreensController {
         loadScreen(screenLoader);
     }
 
+    public static void loadUserEditor() throws IOException {
+        Stage userEditorStage = new Stage();
+        FXMLLoader loader = new FXMLLoader(ScreensController.class.getResource(pathToUserEditorScreen));
+        userEditorStage.setScene(new Scene(loader.load(), 700, 610));
+        //mainContext.getAutowireCapableBeanFactory().autowireBean(loader.getController());
+        userEditorStage.setTitle("Пользователи");
+        userEditorStage.initModality(Modality.APPLICATION_MODAL);
+        userEditorStage.showAndWait();
+    }
+
     private static void loadScreen(FXMLLoader loader) throws IOException {
         primaryStage.setScene(new Scene(loader.load(), screenSizeX, screenSizeY));
-        mainContext.getAutowireCapableBeanFactory().autowireBean(loader.getController());
+        //mainContext.getAutowireCapableBeanFactory().autowireBean(loader.getController());
     }
 }
