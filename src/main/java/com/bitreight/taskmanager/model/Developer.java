@@ -77,8 +77,9 @@ public class Developer {
 
     @Override
     public String toString() {
-        if(surname != null && name != null && patronymic != null) {
-            return surname + " " + name.charAt(0) + "." + patronymic.charAt(0) + ".";
+        if(surname != null & name != null & patronymic != null) {
+            return surname + " " + (!name.equals("") ? name.charAt(0) : "") + "." +
+                    (!patronymic.equals("") ? patronymic.charAt(0) : "") + ".";
         }
         return "";
     }
